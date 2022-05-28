@@ -1,9 +1,22 @@
+import json
 import sys
 from PySide6.QtWidgets import QApplication, QLabel
-import requests
+from requestAPI import RequestAPI
+req = RequestAPI()
 
-request = requests.get("http://localhost:8080/test")
-print(request.content)
+loginData = {
+  "username": "bjsonnen",
+  "password": "rYkTGV69YfV3zy"
+}
+print(req.userCheckLoginPost(json.dumps(loginData)))
+
+newUserData = {
+  "username": "mrabe",
+  "password": "9rqHubhNWJw6GH",
+  "email": "mrabe@yes.yes",
+  "prename": "Max"
+}
+print(req.userRegisterPost(json.dumps(newUserData)))
 
 app = QApplication(sys.argv)
 label = QLabel("Hello World!")

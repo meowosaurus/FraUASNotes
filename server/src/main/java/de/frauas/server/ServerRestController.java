@@ -1,21 +1,44 @@
 package de.frauas.server;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ServerRestController
 {
-    @GetMapping("test")
-    int test()
+    @PostMapping(value = "/registerUserPost",
+                 consumes = "application/json",
+                 produces = "application/json")
+    @ResponseBody
+    public String registerUserPost(@RequestBody NewUserData data)
     {
-        return 101;
+        return "New User with username " + data.username + ", with password " + data.password
+                + ", with email " + data.email + " and prename " + data.prename + " signed up!";
+    }
+
+    @PostMapping(value = "/uploadNotePost",
+                 consumes = "application/json",
+                 produces = "application/json")
+    @ResponseBody
+    public String uploadNotePost(@RequestBody NoteData data)
+    {
+        return "Note " + data.name + " with content: '" + data.xml + "' uploaded!";
+    }
+
+    @PostMapping(value = "/checkUserLoginPost",
+                 consumes = "application/json",
+                 produces = "application/json")
+    @ResponseBody
+    public String checkUserLoginPost(@RequestBody UserData data)
+    {
+        return "User " + data.username + " logged in with password " + data.password + "!";
+    }
+
+    @PostMapping(value = "/loadNotesPost",
+                 consumes = "application/json",
+                 produces = "application/json")
+    @ResponseBody
+    public String loadNotesPost(@RequestBody String json)
+    {
+        return json;
     }
 }
