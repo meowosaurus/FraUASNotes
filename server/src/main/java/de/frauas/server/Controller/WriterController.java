@@ -18,7 +18,7 @@ public class WriterController {
     private WriterRepository writerRepository;
 
     @PostMapping("/addWriter")
-    ResponseEntity<String> newWriter(@RequestBody WriterDto writerDto)
+    Long newWriter(@RequestBody WriterDto writerDto)
             throws UserNameTakenException, EmailAlreadyExistsException {
         writerRepository.findByUserName(writerDto.getUserName()).ifPresent(
                 arg -> {throw new UserNameTakenException(writerDto.getUserName());});
@@ -31,9 +31,8 @@ public class WriterController {
                 writerDto.getFirstName(),
                 writerDto.getEmail(),
                 writerDto.getPassword());
-        return ResponseEntity.ok().body("Writer: " +
-                writerRepository.save(writer).getUserName() +
-                " created successfully!");
+        writerRepository.save(writer);
+        return writerRepository.findIdByUserName(writerDto.getUserName());
     }
 
     @GetMapping("/getAllWriter")

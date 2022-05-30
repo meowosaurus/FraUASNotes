@@ -20,4 +20,7 @@ public interface WriterRepository extends CrudRepository<Writer, String> {
 
     @Query("SELECT writer.password FROM Writer writer WHERE writer.userName = :userName")
     String findPasswordByUserName(@Param("userName")String userName);
+
+    @Query("SELECT writer.id FROM Writer writer WHERE writer.userName = :userName")
+    Long findIdByUserName(@Param("userName")String userName);
 }
