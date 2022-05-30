@@ -1,12 +1,11 @@
 import sys
 
-from PySide6.QtCore import QSize
 from PySide6.QtGui import Qt
-from PySide6.QtWidgets import QApplication, QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, QMenu, \
-    QToolBar
+from PySide6.QtWidgets import QApplication, QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
+    QToolBar, QMainWindow
 
 
-class GUI(QWidget):
+class GUI(QMainWindow):
 
     def __init__(self):
         super().__init__()
@@ -16,17 +15,19 @@ class GUI(QWidget):
         self.create_menu()
         self.create_textbox_1()
         self.create_textbox_2()
-        self.create_toolbar_horizontal()
-        self.create_toolbar_vertical()
+        self.create_toolbars()
+
+        self.addToolBar(self.toolbar_hori)
+        self.addToolBar(Qt.LeftToolBarArea, self.toolbar_vert)
+        self.setMenuBar(self.menubar)
 
         main_layout = QGridLayout()  # Main Layout
-        main_layout.setMenuBar(self.menubar)
-        main_layout.addWidget(self.tabs1, 2, 2)
-        main_layout.addWidget(self.tabs2, 2, 3)
-        main_layout.addWidget(self.toolbar_hori, 1, 0)
-        main_layout.addWidget(self.toolbar_vert, 0, 0)
+        main_layout.addWidget(self.tabs1, 0, 1)
+        main_layout.addWidget(self.tabs2, 0, 2)
 
-        self.setLayout(main_layout)  # sets Layout
+        widget = QWidget()
+        widget.setLayout(main_layout)
+        self.setCentralWidget(widget)
 
     def create_textbox_1(self):
         textbox = QTextEdit()
@@ -49,18 +50,15 @@ class GUI(QWidget):
 
     def create_menu(self):
         self.menubar = QMenuBar()  # adds Menubar
+        file_menu = self.menubar.addMenu("&File")
+        edit_menu = self.menubar.addMenu("&Edit")
+        help_menu = self.menubar.addMenu("&Help")
 
-        self.file_menu = QMenu("&File", self)
-        self.menubar.addMenu(self.file_menu)
+    def create_toolbars(self):
+        self.toolbar_hori = QToolBar()
 
-    def create_toolbar_horizontal(self):
-        self.toolbar_hori = QToolBar("Yes")
-
-    def create_toolbar_vertical(self):
-        self.toolbar_vert = QToolBar("Yes")
+        self.toolbar_vert = QToolBar()
         self.toolbar_vert.setOrientation(Qt.Vertical)
-        self.toolbar_vert.setIconSize(QSize(16,16))
-
 
 
 if __name__ == '__main__':  # Main for testing purposes
