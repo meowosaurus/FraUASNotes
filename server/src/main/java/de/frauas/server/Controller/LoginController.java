@@ -1,5 +1,7 @@
 package de.frauas.server.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
 import de.frauas.server.DTOs.LoginDto;
 import de.frauas.server.Entities.Writer;
 import de.frauas.server.Repositories.NoteRepository;
@@ -19,14 +21,13 @@ public class LoginController {
     private WriterRepository writerRepository;
 
     @GetMapping("/login")
-    Optional<Writer> login(@RequestBody LoginDto loginDto){
+    String login(@RequestBody LoginDto loginDto) throws JsonProcessingException {
         if(writerRepository.findPasswordByUserName(loginDto.getUserName())
             == loginDto.getPassword());
 
         Optional<Writer> writer = writerRepository.findByUserName(loginDto.getUserName());
-        System.out.println(writer.toString());
+        //System.out.println(writer.toString());
 
-
-        return writer;
+        return writer.get().toJson();
     }
 }

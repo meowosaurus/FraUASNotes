@@ -64,4 +64,11 @@ public class Writer {
                 "\n email = " + email +
                 "\n password = " + password;
     }
+
+    public String toJson(){
+        return "{\"id\":" + id + "," +
+                "\"userName\":\"" + userName + "\"," +
+                "\"firstName\":\"" + firstName + "\"," +
+                "\"email\":\"" + email + "\"}";
+    }
 }

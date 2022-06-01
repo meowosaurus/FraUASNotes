@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -17,8 +18,8 @@ public class WriterController {
     @Autowired
     private WriterRepository writerRepository;
 
-    @PostMapping("/addWriter")
-    Long newWriter(@RequestBody WriterDto writerDto)
+    @GetMapping("/addWriter")
+    String newWriter(@RequestBody WriterDto writerDto)
             throws UserNameTakenException, EmailAlreadyExistsException {
         writerRepository.findByUserName(writerDto.getUserName()).ifPresent(
                 arg -> {throw new UserNameTakenException(writerDto.getUserName());});
@@ -32,36 +33,47 @@ public class WriterController {
                 writerDto.getEmail(),
                 writerDto.getPassword());
         writerRepository.save(writer);
-        return writerRepository.findIdByUserName(writerDto.getUserName());
+        return writerRepository.findByUserName(
+                writerDto.getUserName()).
+                get().toJson();
     }
 
     @GetMapping("/getAllWriter")
-    Iterable<Writer> getAllWriter() {
-        return writerRepository.findAll();
+    String getAllWriter() {
+        Iterable<Writer> writers = writerRepository.findAll();
+        String s = "{\"writers\":[";
+        for(Writer writer: writers) {
+            s += writer.toJson();
+            s += ",";
+        }
+        s = s.substring(0, s.length() - 1);
+        s += "]}";
+        System.out.println(s);
+        return s;
     }
 
     @GetMapping("/getWriter/id={id}")
-    Optional<Writer> getWriterById(@PathVariable("id") Long id)
+    String getWriterById(@PathVariable("id") Long id)
             throws UserNotFoundException {
         writerRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
-        return writerRepository.findById(id);
+        return writerRepository.findById(id).get().toJson();
     }
 
     @GetMapping("/getWriter/userName={userName}")
-    Optional<Writer> getWriterByUserName(@PathVariable("userName") String userName)
+    String getWriterByUserName(@PathVariable("userName") String userName)
             throws UserNotFoundException {
         writerRepository.findByUserName(userName)
                 .orElseThrow(() -> new UserNotFoundException(userName));
-        return writerRepository.findByUserName(userName);
+        return writerRepository.findByUserName(userName).get().toJson();
     }
 
     @GetMapping("/getWriter/email={email}")
-    Optional<Writer> getWriterByEmail(@PathVariable("email") String email)
+    String getWriterByEmail(@PathVariable("email") String email)
             throws UserNotFoundException {
         writerRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
-        return writerRepository.findByEmail(email);
+        return writerRepository.findByEmail(email).get().toJson();
     }
 
 
