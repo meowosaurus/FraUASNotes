@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Writer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long writerId;
 
     @Column(unique = true)
     private String userName;
@@ -58,7 +58,7 @@ public class Writer {
     }
 
     public String toString(){
-        return "id = " + id +
+        return "id = " + writerId +
                 "\nuserName = " + userName +
                 "\nfirstName = " + firstName +
                 "\n email = " + email +
@@ -66,7 +66,7 @@ public class Writer {
     }
 
     public String toJson(){
-        return "{\"id\":" + id + "," +
+        return "{\"id\":" + writerId + "," +
                 "\"userName\":\"" + userName + "\"," +
                 "\"firstName\":\"" + firstName + "\"," +
                 "\"email\":\"" + email + "\"}";

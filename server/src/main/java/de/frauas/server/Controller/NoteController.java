@@ -25,6 +25,7 @@ public class NoteController {
     }
 
     //TODO: add exception NoteNotFoundException
+    //TODO: add exception UserDoesNotExistException
 
     @GetMapping("/getAllNotes/writerId={writerId}")
     Iterable<Note> getAllNotes(@PathVariable("writerId") Long writerId){
