@@ -1,7 +1,4 @@
-from LizziTriesThings.classes.Writer import Writer
-from LizziTriesThings.myrequests.writerRequests import writerRequests
-
-request = writerRequests()
+from LizziTriesThings.myrequests.writerRequests import getAllWriter
 
 if __name__ == '__main__':
-    print(request.getAllWriter())
+    print(getAllWriter())

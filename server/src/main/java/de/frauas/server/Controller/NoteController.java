@@ -2,6 +2,7 @@ package de.frauas.server.Controller;
 
 import de.frauas.server.DTOs.NoteDto;
 import de.frauas.server.Entities.Note;
+import de.frauas.server.Entities.Writer;
 import de.frauas.server.Repositories.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +29,18 @@ public class NoteController {
     //TODO: add exception UserDoesNotExistException
 
     @GetMapping("/getAllNotes/writerId={writerId}")
-    Iterable<Note> getAllNotes(@PathVariable("writerId") Long writerId){
-        return noteRepository.findByWriterId(writerId);
+    String getAllNotes(@PathVariable("writerId") Long writerId){
+        Iterable<Note> notes = noteRepository.findByWriterId(writerId);
+        //TODO: add exception NoNotesForWriter
+        String s = "{\"writers\":[";
+        for(Note note: notes) {
+            s += note.toJson();
+            s += ",";
+        }
+        s = s.substring(0, s.length() - 1);
+        s += "]}";
+        System.out.println(s);
+        return s;
     }
 
     @GetMapping("/getAllNotes/title={title}")

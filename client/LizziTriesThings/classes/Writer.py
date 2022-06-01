@@ -1,10 +1,10 @@
 import json
 
 class Writer(object):
-    def __init__(self, userName, password, id, firstName, email):
+    def __init__(self, userName, password, writerId, firstName, email):
         self.userName = userName
         self.password = password
-        self.id = id
+        self.writerId = writerId
         self.firstName = firstName
         self.email = email
 

@@ -1,8 +1,8 @@
 import json
 
 class Note(object):
-    def __init__(self, id, title, note, writerId):
-        self.id = id
+    def __init__(self, noteId, title, note, writerId):
+        self.noteId = noteId
         self.title = title
         self.note = note
         self.writerId = writerId

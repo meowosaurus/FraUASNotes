@@ -66,7 +66,7 @@ public class Writer {
     }
 
     public String toJson(){
-        return "{\"id\":" + writerId + "," +
+        return "{\"writerId\":" + writerId + "," +
                 "\"userName\":\"" + userName + "\"," +
                 "\"firstName\":\"" + firstName + "\"," +
                 "\"email\":\"" + email + "\"}";

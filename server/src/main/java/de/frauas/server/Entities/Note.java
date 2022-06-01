@@ -49,4 +49,10 @@ public class Note {
         this.writerId = writerId;
     }
 
+    public String toJson(){
+        return "{\"noteId\":" + noteId + "," +
+                "\"title\":\"" + title + "\"," +
+                "\"note\":\"" + note + "\"," +
+                "\"writerId\":" + writerId + "}";
+    }
 }
