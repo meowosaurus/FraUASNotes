@@ -22,6 +22,10 @@ You also need the following IDEs:
 - [PyCharm](https://www.jetbrains.com/pycharm/)
 - [IntelliJ (Community)](https://www.jetbrains.com/idea/)
 
+### Linux Installer
+1. Run the installer script with: ```bash <(curl -fsSL https://raw.githubusercontent.com/meowosaurus/FraUASNotes/main/Setup.sh)``` (do NOT run as root!)
+2. Setup [PyCharm IDE](#setup-pycharm-ide) and [IntelliJ IDE](#setup-intellij-ide-(community)) 
+
 ### Setup PyCharm IDE
 1. Open folder ```client/``` as Project
 2. Select Python 3.8 or higher as interpreter
