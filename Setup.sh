@@ -76,11 +76,11 @@ case $(uname -s) in
 	brew install openjdk
 	
 	# Clone github repo
-	git clone https://github.com/meowosaurus/FraUASNotes /home/$USER/Documents/FraUASNotes
-	chown $USER:$USER /home/$USER/Documents/FraUASNotes
+	git clone https://github.com/meowosaurus/FraUASNotes /Users/$USER/Documents/FraUASNotes
+	chown $USER:$USER /Users/$USER/Documents/FraUASNotes
 	
 	# Install requirements
-	pip3 install -r /home/$USER/Documents/FraUASNotes/requirements.txt
+	pip3 install -r /Users/$USER/Documents/FraUASNotes/requirements.txt
 	
 	echo "Installation complete, exiting.."
 	exit 1;;
