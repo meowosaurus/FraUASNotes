@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NoteRepository extends JpaRepository<Note, Long> {
-    @Query("SELECT note FROM Note note WHERE note.id = :id")
+    @Query("SELECT note FROM Note note WHERE note.noteId = :id")
     Optional<Note> findById(@Param("id")Long id);
 
     @Query("SELECT note FROM Note note WHERE note.writerId = :writerId")

@@ -5,7 +5,7 @@ from LizziTriesThings.myrequests.noteRequests import getAllNotes
 if __name__ == '__main__':
     # login existing Writer
     writerLogin = Writer("lizzi", "testPassword", None, None, None)
-    writer = login(writerLogin)
-    print(writer)
-    notes = getAllNotes(writer)
-    print(notes)
+    token = login(writerLogin)
+    print(token)
+    #notes = getAllNotes(writer)
+    #print(notes)

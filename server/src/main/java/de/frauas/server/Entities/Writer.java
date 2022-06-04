@@ -1,15 +1,22 @@
 package de.frauas.server.Entities;
 
-import de.frauas.server.Controller.WriterController;
-import org.springframework.context.annotation.ComponentScan;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
-@ComponentScan(basePackageClasses = WriterController.class)
+
 @Entity
 public class Writer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "sequence-generator_writer")
+    @GenericGenerator(
+            name = "sequence-generator_writer",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "writer_sequence")
+            }
+    )
     private Long writerId;
 
     @Column(unique = true)
@@ -55,6 +62,10 @@ public class Writer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Long getWriterId() {
+        return writerId;
     }
 
     public String toString(){

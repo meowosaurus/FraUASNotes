@@ -1,13 +1,21 @@
 package de.frauas.server.Entities;
 
-import de.frauas.server.Entities.Writer;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity
 public class Note {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "sequence-generator_note")
+    @GenericGenerator(
+            name = "sequence-generator_note",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "note_sequence")
+            }
+    )
     private Long noteId;
     private String title;
     private String note;
