@@ -1,6 +1,7 @@
 package de.frauas.server.Controller;
 
 import de.frauas.server.DTOs.LoginDto;
+import de.frauas.server.DTOs.TokenDto;
 import de.frauas.server.Entities.Token;
 import de.frauas.server.Entities.Writer;
 import de.frauas.server.Repositories.NoteRepository;
@@ -24,15 +25,12 @@ public class LoginController {
 
     @GetMapping("/login")
     String login(@RequestBody LoginDto loginDto) {
-        String password = writerRepository.findPasswordByUserName(loginDto.getUserName());
-        String passwordCheck = loginDto.getPassword();
-        if(Objects.equals(password, passwordCheck)) {
+        if(Objects.equals(writerRepository.findPasswordByUserName(loginDto.getUserName()),
+                loginDto.getPassword())) {
             Optional<Writer> writer = writerRepository.findByUserName(loginDto.getUserName());
             //check if token exists
             Optional<Token> tokenCheck = tokenRepository.findByWriterId(writer.get().getWriterId());
-            if(tokenCheck.isPresent()){
-                tokenRepository.deleteTokenByWriterId(tokenCheck.get().getWriterId());
-            }
+            tokenCheck.ifPresent(token -> tokenRepository.deleteTokenByWriterId(token.getWriterId()));
 
             Token token = new Token(writer.get().getWriterId());
             tokenRepository.save(token);
@@ -41,5 +39,11 @@ public class LoginController {
             return tokenReturn.get().toJson();
         }
         return "{\"Reply\":\"Password is wrong!\"}";
+    }
+
+    @PostMapping("/logout")
+    String logout(@RequestBody TokenDto tokenDto){
+        tokenRepository.deleteTokenByWriterId(tokenDto.getWriterId());
+        return "Logout completed!";
     }
 }

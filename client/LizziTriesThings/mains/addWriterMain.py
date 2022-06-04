@@ -1,4 +1,4 @@
-from LizziTriesThings.classes.Writer import Writer
+from Model.Writer import Writer
 from LizziTriesThings.myrequests.writerRequests import addWriter
 
 if __name__ == '__main__':

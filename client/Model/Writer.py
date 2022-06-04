@@ -1,5 +1,6 @@
 import json
 
+
 class Writer(object):
     def __init__(self, userName, password, writerId, firstName, email):
         self.userName = userName
