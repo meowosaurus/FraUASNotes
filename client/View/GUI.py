@@ -2,13 +2,30 @@ import sys
 
 from PySide6.QtGui import Qt, QFont
 from PySide6.QtWidgets import QApplication, QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
-    QToolBar, QMainWindow, QDialog, QLineEdit, QPushButton
+    QToolBar, QMainWindow, QLineEdit, QPushButton
 
 import GUI_Functionalities
-
+from TextEditor import TextEditor
+from LoginWindow import LoginWindow
 
 class GUI(QMainWindow):
 
+    def __init__(self): 
+        super().__init__()
+        self.UsrLoggedIn = False
+        while not self.UsrLoggedIn:
+            self.UserLogin()
+
+        self.TextEditor = TextEditor()
+        self.TextEditor.show()
+        
+        
+    def UserLogin(self):
+            self.qdLogin = LoginWindow(self)
+            self.qdLogin.show()
+            self.qdLogin.exec()
+
+'''
     textbox_1 = None
 
     def __init__(self):
@@ -94,38 +111,8 @@ class GUI(QMainWindow):
         #Creates vertical toolbar
         self.toolbar_vert = QToolBar()
         self.toolbar_vert.setOrientation(Qt.Vertical)
-
-    def UserLogin(self):
-        self.qdLogin = LoginWindow(self)
-        self.qdLogin.show()
-        self.qdLogin.exec()
-
-class LoginWindow(QDialog):
-    def __init__(self, parent) -> None:
-        QDialog.__init__(self)
-        self.parent = parent 
-        self.setWindowTitle("User Login")
-        self.setWindowModality(Qt.ApplicationModal)
-        self.setAttribute(Qt.WA_DeleteOnClose)
-               
-        self.resize(400, 300)
-        self.UName = QLineEdit(self)
-        self.UName.resize(130,20)
-        self.UName.move(135,100)
-
-        self.UPass = QLineEdit(self)
-        self.UPass.resize(130,20)
-        self.UPass.move(135, 160)
-
-        self.RegButton = QPushButton('Login', self) 
-        self.RegButton.clicked.connect(self.register)
-
-        self.RegButton.move(168, 190)
-
-    def register(self): 
-        if self.UName.text() == "u" and self.UPass.text() == "u":
-            self.parent.UsrLoggedIn = True
-        self.close()
+'''
+    
 
 if __name__ == '__main__':  # Main for testing purposes
     app = QApplication(sys.argv)

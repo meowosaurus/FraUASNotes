@@ -22,4 +22,6 @@ def underline_text(self, textbox):
     self.underline_button.setCheckable(True)
     self.underline_button.toggled.connect(textbox.setFontUnderline)
 
-
+def login(self, username, password):
+    # creates writer obj - > sends to server - > gets real writer obj. 
+    pass
