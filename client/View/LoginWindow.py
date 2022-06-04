@@ -1,6 +1,12 @@
 from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QDialog, QLineEdit, QPushButton
 
+
+import sys
+sys.path.append('../')
+from APIHelper import LoginHelper
+from Model.Writer import Writer
+
 class LoginWindow(QDialog):
     def __init__(self, parent) -> None:
         QDialog.__init__(self)
@@ -24,7 +30,6 @@ class LoginWindow(QDialog):
         self.RegButton.move(168, 190)
 
     def register(self): 
-        if self.UName.text() == "u" and self.UPass.text() == "u":
+        if LoginHelper.login(Writer(self.UName.text(), self.UPass.text(), None, None, None)):
             self.parent.UsrLoggedIn = True
-            print("HI")
         self.close()

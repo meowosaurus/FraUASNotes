@@ -1,8 +1,7 @@
 import sys
 
-from PySide6.QtGui import Qt, QFont
-from PySide6.QtWidgets import QApplication, QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
-    QToolBar, QMainWindow, QLineEdit, QPushButton
+from PySide6.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
+    QToolBar, QMainWindow, QLineEdit
 
 import GUI_Functionalities
 from TextEditor import TextEditor
@@ -10,15 +9,14 @@ from LoginWindow import LoginWindow
 
 class GUI(QMainWindow):
 
-    def __init__(self): 
+    def __init__(self):
         super().__init__()
         self.UsrLoggedIn = False
         while not self.UsrLoggedIn:
             self.UserLogin()
-
         self.TextEditor = TextEditor()
         self.TextEditor.show()
-        
+
         
     def UserLogin(self):
             self.qdLogin = LoginWindow(self)
