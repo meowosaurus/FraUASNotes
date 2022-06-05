@@ -54,15 +54,17 @@ public class WriterController {
         return s;
     }
 
-    @GetMapping("/getWriter/token={token}/id={id}")
-    String getWriterById(@PathVariable("token") Long token, @PathVariable("id") Long id)
+    @GetMapping("/getWriter/token={token}/writerId={writerId}")
+    String getWriterById(@PathVariable("token") Long token, @PathVariable("writerId") Long writerId)
             throws UserNotFoundException {
         Optional<Token> tokenCheck = tokenRepository.findByToken(token);
         if(tokenCheck.isPresent() &&
-                tokenCheck.get().getWriterId().equals(id)) {
-            writerRepository.findById(id)
-                    .orElseThrow(() -> new UserNotFoundException(id));
-            return writerRepository.findById(id).get().toJson();
+                tokenCheck.get().getWriterId().equals(writerId)) {
+            writerRepository.findById(writerId)
+                    .orElseThrow(() -> new UserNotFoundException(writerId));
+            tokenCheck.get().updateLastUsed();
+            tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
+            return writerRepository.findById(writerId).get().toJson();
         }
         return "{\"Reply\":\"Token is not correct!\"}";
     }
@@ -74,8 +76,11 @@ public class WriterController {
         if(tokenCheck.isPresent()){
             Writer writer = writerRepository.findByUserName(userName)
                     .orElseThrow(() -> new UserNotFoundException(userName));
-            if(tokenCheck.get().getWriterId().equals(writer.getWriterId()))
+            if(tokenCheck.get().getWriterId().equals(writer.getWriterId())) {
+                tokenCheck.get().updateLastUsed();
+                tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
                 return writer.toJson();
+            }
         }
         return "{\"Reply\":\"Token is not correct!\"}";
     }
@@ -87,8 +92,11 @@ public class WriterController {
         if (tokenCheck.isPresent()){
             Writer writer = writerRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
-            if(tokenCheck.get().getWriterId().equals(writer.getWriterId()))
+            if(tokenCheck.get().getWriterId().equals(writer.getWriterId())) {
+                tokenCheck.get().updateLastUsed();
+                tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
                 return writerRepository.findByEmail(email).get().toJson();
+            }
         }
         return "{\"Reply\":\"Token is not correct!\"}";
     }

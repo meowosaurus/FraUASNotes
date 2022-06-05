@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +18,10 @@ public interface TokenRepository extends JpaRepository<Token, UUID> {
 
     @Query("SELECT token FROM Token token WHERE token.token = :token")
     Optional<Token> findByToken(@Param("token")Long token);
+
+    @Modifying
+    @Query("update Token token set token.lastUsed = :lastUsed WHERE token.writerId = :writerId")
+    void updateToken(@Param("lastUsed") Date lastUsed, @Param("writerId")Long writerId);
 
     @Modifying
     @Transactional

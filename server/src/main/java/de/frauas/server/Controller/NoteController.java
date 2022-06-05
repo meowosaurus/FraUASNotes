@@ -37,6 +37,8 @@ public class NoteController {
                     noteDto.getTitle(),
                     noteDto.getNote(),
                     noteDto.getWriterId());
+            tokenCheck.get().updateLastUsed();
+            tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
             return ResponseEntity.ok().body("Note: " +
                     noteRepository.save(note).getTitle() +
                     " created successfully!");
@@ -64,7 +66,8 @@ public class NoteController {
             }
             s = s.substring(0, s.length() - 1);
             s += "]}";
-            System.out.println(s);
+            tokenCheck.get().updateLastUsed();
+            tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
             return ResponseEntity.ok()
                     //.headers(responseHeaders)
                     .body(s);

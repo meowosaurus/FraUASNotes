@@ -25,8 +25,9 @@ public class LoginController {
 
     @GetMapping("/login")
     String login(@RequestBody LoginDto loginDto) {
-        if(Objects.equals(writerRepository.findPasswordByUserName(loginDto.getUserName()),
-                loginDto.getPassword())) {
+        String password = writerRepository.findPasswordByUserName(loginDto.getUserName());
+        String passwordCheck = loginDto.getPassword();
+        if(Objects.equals(password, passwordCheck)) {
             Optional<Writer> writer = writerRepository.findByUserName(loginDto.getUserName());
             //check if token exists
             Optional<Token> tokenCheck = tokenRepository.findByWriterId(writer.get().getWriterId());
@@ -35,7 +36,6 @@ public class LoginController {
             Token token = new Token(writer.get().getWriterId());
             tokenRepository.save(token);
             Optional<Token>tokenReturn = tokenRepository.findByWriterId(writer.get().getWriterId());
-            System.out.println(tokenReturn.get().toJson());
             return tokenReturn.get().toJson();
         }
         return "{\"Reply\":\"Password is wrong!\"}";

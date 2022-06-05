@@ -3,6 +3,7 @@ package de.frauas.server.Entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -13,11 +14,18 @@ public class Token {
     @Column(unique = true, nullable = false)
     private Long writerId;
 
+    private Date lastUsed;
+
     public Token(){}
 
     public Token(Long writerId){
         this.writerId = writerId;
         token = UUID.randomUUID();
+        lastUsed = new Date();
+    }
+
+    public void updateLastUsed(){
+        lastUsed = new Date();
     }
 
     public UUID getToken() {
@@ -34,6 +42,10 @@ public class Token {
 
     public void setWriterId(Long writerId) {
         this.writerId = writerId;
+    }
+
+    public Date getLastUsed() {
+        return lastUsed;
     }
 
     public String toJson(){
