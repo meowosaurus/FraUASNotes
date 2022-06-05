@@ -1,36 +1,40 @@
 
-from PySide6.QtGui import Qt, QFont
-from PySide6.QtWidgets import QApplication, QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
-    QToolBar, QDialog, QLineEdit, QPushButton, QMainWindow
+from PySide6.QtGui import Qt, QFont, QAction
+from PySide6.QtWidgets import QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
+    QToolBar, QMainWindow, QFileDialog
 
 import GUI_Functionalities
 
-class TextEditor(QMainWindow):
+import xml.etree.ElementTree as ET
 
+
+class TextEditor(QMainWindow):
     textbox_1 = None
+    filename = None
+    path = None
 
     def __init__(self):
         super().__init__()
 
-        #Initiliaze buttons for later use
+        # Initiliaze buttons for later use
         self.underline_button = None
         self.italic_button = None
         self.bold_button = None
 
-        #Configure window size + title
+        # Configure window size + title
         self.resize(1920, 1080)
         self.setWindowTitle("FraUasNotes")
 
-        #Call function to create file menu, textbox 1&2 and both toolbars
-        self.create_menu()
+        # Call function to create file menu, textbox 1&2 and both toolbars
         self.create_textbox_1()
         self.create_textbox_2()
         self.create_toolbars()
+        self.create_menu()
         self.addToolBar(self.toolbar_hori)
         self.addToolBar(Qt.LeftToolBarArea, self.toolbar_vert)
         self.setMenuBar(self.menubar)
 
-        #Add tabs to main layout
+        # Add tabs to main layout
         main_layout = QGridLayout()  # Main Layout
         main_layout.addWidget(self.tabs1, 0, 1)
         main_layout.addWidget(self.tabs2, 0, 2)
@@ -39,14 +43,13 @@ class TextEditor(QMainWindow):
         self.setCentralWidget(widget)
 
     def create_textbox_1(self):
-
-        #Create textbox
+        # Create textbox
         self.textbox_1 = QTextEdit()
 
-        #Set Fontsize and Fontstyle
+        # Set Fontsize and Fontstyle
         font = QFont('Times', 12)
         self.textbox_1.setFont(font)
-        #Fontsize needs to be called again
+        # Fontsize needs to be called again
         self.textbox_1.setFontPointSize(12)
 
         self.tb_1 = QWidget()  # Creates tb1 as widget
@@ -67,24 +70,63 @@ class TextEditor(QMainWindow):
 
     def create_menu(self):
         self.menubar = QMenuBar()  # adds Menubar
+
         file_menu = self.menubar.addMenu("&File")
         edit_menu = self.menubar.addMenu("&Edit")
         help_menu = self.menubar.addMenu("&Help")
 
+        newFile = QAction("&New File", self)
+        newFile.setShortcut("Ctrl+N")
+        newFile.triggered.connect(self.new_file)
+        file_menu.addAction(newFile)
+
+        openFile = QAction("&Open File", self)
+        openFile.setShortcut("Ctrl+O")
+        openFile.triggered.connect(self.file_open)
+        file_menu.addAction(openFile)
+
+        saveFile = QAction("&Save File", self)
+        saveFile.setShortcut("Ctrl+S")
+        saveFile.triggered.connect(self.save_file)
+        file_menu.addAction(saveFile)
+
     def create_toolbars(self):
-        #Creates toolbar horizontal
+        # Creates toolbar horizontal
         self.toolbar_hori = QToolBar()
 
-        #Calls function from GUI_Functionalities and crates bold_button, italic_button, underline_button
+        # Calls function from GUI_Functionalities and crates bold_button, italic_button, underline_button
         GUI_Functionalities.bold_text(self, self.textbox_1)
         GUI_Functionalities.italic_text(self, self.textbox_1)
         GUI_Functionalities.underline_text(self, self.textbox_1)
 
-        #Adds buttons to toolbar
+        # Adds buttons to toolbar
         self.toolbar_hori.addAction(self.bold_button)
         self.toolbar_hori.addAction(self.italic_button)
         self.toolbar_hori.addAction(self.underline_button)
 
-        #Creates vertical toolbar
+        # Creates vertical toolbar
         self.toolbar_vert = QToolBar()
         self.toolbar_vert.setOrientation(Qt.Vertical)
+
+
+    def file_open(self):
+        self.filename = QFileDialog.getOpenFileName()
+        self.path = self.filename[0]
+        with open(self.path, 'r') as f:
+            content = f.read()
+            self.textbox_1.setText(content)
+
+    def save_file(self):
+
+        data = ET.Element('root')
+        element1 = ET.SubElement(data, 'Content')
+        s_elem1 = ET.SubElement(element1, 'Text')
+        s_elem1.text = self.textbox_1.toPlainText()
+        b_xml = ET.tostring(data)
+
+
+        with open("current_file.xml", "wb") as f:
+            f.write(b_xml)
+
+    def new_file(self):
+        pass
