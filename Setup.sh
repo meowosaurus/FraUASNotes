@@ -17,7 +17,7 @@ then
 fi
 
 
-if [[ $OSTYPE == "Darwin"* ]]
+if [[ $OSTYPE == "darwin"* ]]
 then
 	echo "Detected MacOS"
 
