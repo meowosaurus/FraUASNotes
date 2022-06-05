@@ -22,7 +22,7 @@ You also need the following IDEs:
 - [PyCharm](https://www.jetbrains.com/pycharm/)
 - [IntelliJ (Community)](https://www.jetbrains.com/idea/)
 
-### Linux Installer
+### Linux & Mac Installer
 1. Run the installer script with: ```bash <(curl -fsSL https://raw.githubusercontent.com/meowosaurus/FraUASNotes/main/Setup.sh)``` (do NOT run as root!)
 2. Setup [PyCharm IDE](#setup-pycharm-ide) and [IntelliJ IDE](#setup-intellij-ide-(community)) 
 
