@@ -9,6 +9,7 @@ import sys
 sys.path.append('../')
 
 from Model.Token import Token
+from Model.Writer import Writer
 
 def login(writer):
     '''
@@ -28,8 +29,8 @@ def login(writer):
         if hasattr(reply, "token"): 
             return __toToken(reply)
         else: 
-            print(reply)
-            return None
+            print(reply.Reply)
+            return reply
     except requests.exceptions.RequestException as e:
         return e
 
@@ -39,5 +40,19 @@ def __toToken(SN: SimpleNamespace) -> Token:
 def logout(): 
     pass
 
-#from Model.Writer import Writer
-#a = login(Writer("Hendrikwe", "1234", None, None, None))
+def addWriter(writer):
+    headers = {
+        'Accept': 'application/json',  # Accepting json strings from server
+        'Content-Type': 'application/json',  # Sending json strings to server
+        'Content-Encoding': 'gzip'  # Compressing all data send by the client to save bandwidth
+    }
+    try:
+        r = requests.get("http://localhost:8090/addWriter",
+                         data=writer.toJSON(),
+                         headers=headers)
+        return json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
+    except requests.exceptions.RequestException as e:
+        return e
+
+print(addWriter(Writer("Tester3", "Test", None, "Test3", "Test3")))
+

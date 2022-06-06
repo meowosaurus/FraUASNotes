@@ -4,6 +4,7 @@ from types import SimpleNamespace
 
 
 def addWriter(writer):
+    # now in API Helper as register
     headers = {
         'Accept': 'application/json',  # Accepting json strings from server
         'Content-Type': 'application/json',  # Sending json strings to server
