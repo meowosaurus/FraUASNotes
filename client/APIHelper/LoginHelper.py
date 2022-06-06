@@ -54,5 +54,5 @@ def addWriter(writer):
     except requests.exceptions.RequestException as e:
         return e
 
-print(addWriter(Writer("Tester3", "Test", None, "Test3", "Test3")))
-
+print(login(Writer("H", "h", None, None, None)).token)
+print(login(Writer("H", "h", None, None, None)).writerId)

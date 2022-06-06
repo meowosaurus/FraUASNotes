@@ -1,13 +1,15 @@
 import sys
 import time
 
-from PySide6.QtWidgets import QApplication, QWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
-    QToolBar, QMainWindow, QLineEdit, QPushButton, QLabel
+from PySide6.QtWidgets import *
 
-import GUI_Functionalities
 from TextEditor import TextEditor
 import LoginWindow
 import RegisterWindow
+import Menu
+
+sys.path.append('../')
+from Model import Note
 
 class GUI(QMainWindow):
 
@@ -15,9 +17,10 @@ class GUI(QMainWindow):
         super().__init__()
         self.UserLogin()
 
-    def initMyself(self):
-        self.resize(600,600)
-        self.show()
+    def initMenu(self):
+        self.Menu = Menu.Menu(self)
+        self.Menu.show()
+        self.close()
 
     def UserLogin(self):
         self.qdLogin = LoginWindow.LoginWindow(self)
@@ -29,7 +32,7 @@ class GUI(QMainWindow):
         self.RegisterWindow.show()
         self.close()
 
-    def OpenTextEditor(self):
+    def OpenTextEditor(self, note: Note):
         self.TextEditor = TextEditor()
         self.TextEditor.show()
         self.close()

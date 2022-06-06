@@ -15,6 +15,13 @@ class RegisterWindow(QDialog):
         self.resize(400,300)
 
         # Fields
+        self.backToLogin = QPushButton("Back to login", self)
+        self.backToLogin.move(282, 265)
+        self.backToLogin.clicked.connect(self.goToLoginWindow)
+
+        self.QLabelHeader = QLabel("Please enter your registration data: ", self)
+        self.QLabelHeader.move(60,40)
+
         self.QLabelUName = QLabel(self)
         self.QLabelUName.setText("Username")
         self.QLabelUName.move(60, 80)
@@ -32,9 +39,9 @@ class RegisterWindow(QDialog):
         self.QLabelpassword2 = QLabel(self)
         self.QLabelpassword2.setText("Password")
         self.QLabelpassword2.move(60, 140)
-        self.password = QLineEdit(self)
-        self.password.resize(130, 20)
-        self.password.move(135, 140)
+        self.password2 = QLineEdit(self)
+        self.password2.resize(130, 20)
+        self.password2.move(135, 140)
 
         self.QLabelName = QLabel(self)
         self.QLabelName.setText("Name")
@@ -54,10 +61,18 @@ class RegisterWindow(QDialog):
         self.RegisterButton.clicked.connect(self.register)
         self.RegisterButton.move(160, 230)
 
+        self.QLabelMessage = QLabel("", self)
+        self.QLabelMessage.move(120, 270)
+
     def register(self):
-        print("trys to reg")
-        if self.QLabelpassword.text() != self.QLabelpassword2.text():
-            print("Passwöter müssen glecih sein ")
+        print("Tries to register.")
+        if not self.firstName.text() or not self.userName.text() or not self.password.text() or not self.email.text():
+            self.QLabelMessage.setText("No empty spaces!")
+            self.QLabelMessage.resize(280, 20)
+            return
+        if self.password.text() != self.password2.text():
+            self.QLabelMessage.setText("Passwords are unequal!")
+            self.QLabelMessage.resize(280,20)
             return
         reply = LoginHelper.addWriter(Writer(self.firstName.text(), self.password.text(), None, self.firstName.text(), self.email.text()))
         print(reply)
@@ -66,3 +81,13 @@ class RegisterWindow(QDialog):
             # TODO directly log in
             self.parent.UserLogin()
             self.close()
+        else:
+            self.QLabelMessage.setText("Credentials not free... try again!")
+            self.QLabelMessage.move(80, 270)
+            self.QLabelMessage.resize(200, 20)
+            return
+
+
+    def goToLoginWindow(self):
+        self.parent.UserLogin()
+        self.close()

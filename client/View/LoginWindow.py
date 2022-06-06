@@ -6,6 +6,7 @@ import sys
 sys.path.append('../')
 from GUI import GUI
 from APIHelper import LoginHelper
+from APIHelper import WriterHelper
 from Model.Writer import Writer
 from View.GUI import GUI
 from View.RegisterWindow import RegisterWindow
@@ -16,6 +17,10 @@ class LoginWindow(QDialog):
         QDialog.__init__(self)
         self.parent = parent
         self.setWindowTitle("User Login")
+
+        self.QLabel = QLabel("Enter your login data...", self)
+        print(self.QLabel.size())
+        self.QLabel.move(130, 60)
 
         self.resize(400, 300)
         self.UName = QLineEdit(self)
@@ -35,6 +40,8 @@ class LoginWindow(QDialog):
         self.RegButton.clicked.connect(self.register)
         self.RegButton.move(160, 220)
 
+        self.QLabelMessage = QLabel("", self)
+        self.QLabelMessage.move(120, 250)
 
     def login(self):
 
@@ -42,12 +49,12 @@ class LoginWindow(QDialog):
         if hasattr(reply, "token"):
             print("Successfully logged in")
             self.hide()
-            self.parent.initMyself()
+            #self.parent.token = reply
+            #self.parent.writer = WriterHelper.getWriter(reply)
+            self.parent.initMenu()
         else:
-            self.falseLogin = QLabel(reply.Reply)
-            self.falseLogin.resize(130, 20)
-            self.falseLogin.move(168, 240)
-
+            self.QLabelMessage.resize(300,30)
+            self.QLabelMessage.setText(reply.Reply)
 
     def register(self):
         self.parent.UserRegisers()

@@ -1,6 +1,12 @@
+# Lizzi hat Token implementiert
+
 import json
 import requests
 from types import SimpleNamespace
+
+import sys
+sys.path.append('../')
+from Model.Note import Note
 
 def addNote(note):
     headers = {
@@ -17,7 +23,10 @@ def addNote(note):
         return e
 
 
-def getAllNotes(writer):
+'''
+Returns a list of all notes a Writer has 
+'''
+def getAllNotes(writer) -> list:
     headers = {
         'Accept': 'application/json',  # Accepting json strings from server
         'Content-Type': 'application/json',  # Sending json strings to server
