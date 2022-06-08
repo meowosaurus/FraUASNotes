@@ -1,5 +1,6 @@
 package de.frauas.server.Controller;
 
+import de.frauas.server.DTOs.TokenDto;
 import de.frauas.server.DTOs.WriterDto;
 import de.frauas.server.Entities.Token;
 import de.frauas.server.Exceptions.EmailAlreadyExistsException;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 public class WriterController {
@@ -20,7 +22,7 @@ public class WriterController {
     @Autowired
     private TokenRepository tokenRepository;
 
-    @GetMapping("/addWriter")
+    @PostMapping("/addWriter")
     String newWriter(@RequestBody WriterDto writerDto)
             throws UserNameTakenException, EmailAlreadyExistsException {
         writerRepository.findByUserName(writerDto.getUserName()).ifPresent(
@@ -40,6 +42,21 @@ public class WriterController {
                 get().toJson();
     }
 
+    @GetMapping("/getWriter")
+    String getWriterById(@RequestBody TokenDto tokenDto)
+            throws UserNotFoundException {
+        Optional<Token> tokenCheck = tokenRepository.findByToken(tokenDto.getToken());
+        if(tokenCheck.isPresent() &&
+                tokenCheck.get().getWriterId().equals(tokenDto.getWriterId())) {
+            writerRepository.findById(tokenDto.getWriterId())
+                    .orElseThrow(() -> new UserNotFoundException(tokenDto.getWriterId()));
+            tokenCheck.get().updateLastUsed();
+            tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
+            return writerRepository.findById(tokenDto.getWriterId()).get().toJson();
+        }
+        return "{\"Reply\":\"Token is not correct!\"}";
+    }
+
     @GetMapping("/getAllWriter")
     String getAllWriter() {
         Iterable<Writer> writers = writerRepository.findAll();
@@ -54,23 +71,8 @@ public class WriterController {
         return s;
     }
 
-    @GetMapping("/getWriter/token={token}/writerId={writerId}")
-    String getWriterById(@PathVariable("token") Long token, @PathVariable("writerId") Long writerId)
-            throws UserNotFoundException {
-        Optional<Token> tokenCheck = tokenRepository.findByToken(token);
-        if(tokenCheck.isPresent() &&
-                tokenCheck.get().getWriterId().equals(writerId)) {
-            writerRepository.findById(writerId)
-                    .orElseThrow(() -> new UserNotFoundException(writerId));
-            tokenCheck.get().updateLastUsed();
-            tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
-            return writerRepository.findById(writerId).get().toJson();
-        }
-        return "{\"Reply\":\"Token is not correct!\"}";
-    }
-
     @GetMapping("/getWriter/token={token}/userName={userName}")
-    String getWriterByUserName(@PathVariable("token") Long token, @PathVariable("userName") String userName)
+    String getWriterByUserName(@PathVariable("token") UUID token, @PathVariable("userName") String userName)
             throws UserNotFoundException {
         Optional<Token> tokenCheck = tokenRepository.findByToken(token);
         if(tokenCheck.isPresent()){
@@ -86,7 +88,7 @@ public class WriterController {
     }
 
     @GetMapping("/getWriter/token={token}/email={email}")
-    String getWriterByEmail(@PathVariable("token") Long token, @PathVariable("email") String email)
+    String getWriterByEmail(@PathVariable("token") UUID token, @PathVariable("email") String email)
             throws UserNotFoundException {
         Optional<Token> tokenCheck = tokenRepository.findByToken(token);
         if (tokenCheck.isPresent()){

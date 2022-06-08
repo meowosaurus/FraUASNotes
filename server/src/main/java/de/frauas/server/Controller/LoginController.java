@@ -23,7 +23,7 @@ public class LoginController {
     @Autowired
     private TokenRepository tokenRepository;
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     String login(@RequestBody LoginDto loginDto) {
         String password = writerRepository.findPasswordByUserName(loginDto.getUserName());
         String passwordCheck = loginDto.getPassword();

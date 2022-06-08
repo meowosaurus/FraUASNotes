@@ -8,11 +8,12 @@ import sys
 sys.path.append('../')
 from Model.Note import Note
 
-def addNote(note):
+def addNote(token, note):
     headers = {
         'Accept': 'application/json',  # Accepting json strings from server
         'Content-Type': 'application/json',  # Sending json strings to server
-        'Content-Encoding': 'gzip'  # Compressing all data send by the client to save bandwidth
+        'Content-Encoding': 'gzip',  # Compressing all data send by the client to save bandwidth
+        'token': token.token
     }
     try:
         r = requests.post("http://localhost:8090/addNote",
@@ -26,15 +27,15 @@ def addNote(note):
 '''
 Returns a list of all notes a Writer has 
 '''
-def getAllNotes(writer) -> list:
+def getAllNotes(token) -> list:
     headers = {
         'Accept': 'application/json',  # Accepting json strings from server
         'Content-Type': 'application/json',  # Sending json strings to server
         'Content-Encoding': 'gzip'  # Compressing all data send by the client to save bandwidth
     }
     try:
-        s = str(writer.writerId)
-        r = requests.get("http://localhost:8090/getAllNotes/writerId=" + s,
+        r = requests.get("http://localhost:8090/getAllNotes",
+                         data=token.toJSON(),
                          headers=headers)
         return json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
     except requests.exceptions.RequestException as e:

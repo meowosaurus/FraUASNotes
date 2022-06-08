@@ -54,7 +54,7 @@ class LoginWindow(QDialog):
             self.parent.initMenu()
         else:
             self.QLabelMessage.resize(300,30)
-            self.QLabelMessage.setText(reply.Reply)
+            #self.QLabelMessage.setText(reply.Reply)
 
     def register(self):
         self.parent.UserRegisers()

@@ -19,7 +19,7 @@ public class Writer {
     )
     private Long writerId;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String userName;
 
     private String firstName;

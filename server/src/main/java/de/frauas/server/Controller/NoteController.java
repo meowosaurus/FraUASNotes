@@ -1,6 +1,7 @@
 package de.frauas.server.Controller;
 
 import de.frauas.server.DTOs.NoteDto;
+import de.frauas.server.DTOs.TokenDto;
 import de.frauas.server.Entities.Note;
 import de.frauas.server.Entities.Token;
 import de.frauas.server.Exceptions.NoNotesForWriterException;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 public class NoteController {
@@ -25,8 +27,8 @@ public class NoteController {
     @Autowired
     private TokenRepository tokenRepository;
 
-    @PostMapping("/addNote/token={token}")
-    ResponseEntity<String> newNote(@PathVariable("token") Long token, @RequestBody NoteDto noteDto)
+    @PostMapping("/addNote")
+    ResponseEntity<String> newNote(@RequestHeader UUID token, @RequestBody NoteDto noteDto)
             throws UserDoesNotExistException {
         if(writerRepository.findById(noteDto.getWriterId()).isEmpty()){
                 throw new UserDoesNotExistException(noteDto.getWriterId());}
@@ -46,15 +48,15 @@ public class NoteController {
         return ResponseEntity.ok().body("Token is not correct!");
     }
 
-    @GetMapping("/getAllNotes/token={token}/writerId={writerId}")
-    ResponseEntity<String> getAllNotes(@PathVariable("token") Long token, @PathVariable("writerId") Long writerId)
+    @GetMapping("/getAllNotes")
+    ResponseEntity<String> getAllNotes(@RequestBody TokenDto tokenDto)
             throws NoNotesForWriterException{
-        Optional<Token> tokenCheck = tokenRepository.findByToken(token);
+        Optional<Token> tokenCheck = tokenRepository.findByToken(tokenDto.getToken());
         if(tokenCheck.isPresent() &&
-                tokenCheck.get().getWriterId().equals(writerId)) {
-            Iterable<Note> notes = noteRepository.findByWriterId(writerId);
+                tokenCheck.get().getWriterId().equals(tokenDto.getWriterId())) {
+            Iterable<Note> notes = noteRepository.findByWriterId(tokenDto.getWriterId());
             if (IterableUtils.size(notes) == 0)
-                throw new NoNotesForWriterException(writerId);
+                throw new NoNotesForWriterException(tokenDto.getWriterId());
 
             //HttpHeaders responseHeaders = new HttpHeaders();
             //responseHeaders.set("Content-Encoding", "gzip");

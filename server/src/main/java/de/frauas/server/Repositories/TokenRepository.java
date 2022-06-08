@@ -17,7 +17,7 @@ public interface TokenRepository extends JpaRepository<Token, UUID> {
     Optional<Token> findByWriterId(@Param("writerId")Long writerId);
 
     @Query("SELECT token FROM Token token WHERE token.token = :token")
-    Optional<Token> findByToken(@Param("token")Long token);
+    Optional<Token> findByToken(@Param("token")UUID token);
 
     @Modifying
     @Query("update Token token set token.lastUsed = :lastUsed WHERE token.writerId = :writerId")
