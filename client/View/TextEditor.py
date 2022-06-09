@@ -1,7 +1,8 @@
+import sys
 
 from PySide6.QtGui import Qt, QFont, QAction
 from PySide6.QtWidgets import QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
-    QToolBar, QMainWindow, QFileDialog
+    QToolBar, QMainWindow, QFileDialog, QApplication
 
 import GUI_Functionalities
 
@@ -12,6 +13,7 @@ class TextEditor(QMainWindow):
     textbox_1 = None
     filename = None
     path = None
+    x = True
 
     def __init__(self):
         super().__init__()
@@ -42,6 +44,7 @@ class TextEditor(QMainWindow):
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
 
+
     def create_textbox_1(self):
         # Create textbox
         self.textbox_1 = QTextEdit()
@@ -60,7 +63,7 @@ class TextEditor(QMainWindow):
         self.tabs1.addTab(self.tb_1, 'Tab 1')  # adds tab1_1 to tab1 + description
 
     def create_textbox_2(self):
-        self.textbox_2 = QTextEdit()
+        self.textbox_2 = QTextEdit(readOnly=True)
         self.tb_2 = QWidget()  # Same functionality as textbox above
         self.tb_2.layout = QVBoxLayout()
         self.tb_2.layout.addWidget(self.textbox_2)
@@ -108,25 +111,30 @@ class TextEditor(QMainWindow):
         self.toolbar_vert = QToolBar()
         self.toolbar_vert.setOrientation(Qt.Vertical)
 
-
     def file_open(self):
         self.filename = QFileDialog.getOpenFileName()
         self.path = self.filename[0]
         with open(self.path, 'r') as f:
             content = f.read()
             self.textbox_1.setText(content)
+            self.textbox_2.setMarkdown(content)
 
     def save_file(self):
-
         data = ET.Element('root')
         element1 = ET.SubElement(data, 'Content')
         s_elem1 = ET.SubElement(element1, 'Text')
         s_elem1.text = self.textbox_1.toPlainText()
         b_xml = ET.tostring(data)
 
-
         with open("current_file.xml", "wb") as f:
             f.write(b_xml)
 
     def new_file(self):
-        pass
+        self.textbox_2.setMarkdown(self.textbox_1.toPlainText())
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    w = TextEditor()
+    w.show()
+    app.exec()
