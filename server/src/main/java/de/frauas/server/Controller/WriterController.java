@@ -72,7 +72,7 @@ public class WriterController {
     }
 
     @GetMapping("/getWriter/token={token}/userName={userName}")
-    String getWriterByUserName(@PathVariable("token") UUID token, @PathVariable("userName") String userName)
+    String getWriterByUserName(@PathVariable("token") String token, @PathVariable("userName") String userName)
             throws UserNotFoundException {
         Optional<Token> tokenCheck = tokenRepository.findByToken(token);
         if(tokenCheck.isPresent()){
@@ -88,7 +88,7 @@ public class WriterController {
     }
 
     @GetMapping("/getWriter/token={token}/email={email}")
-    String getWriterByEmail(@PathVariable("token") UUID token, @PathVariable("email") String email)
+    String getWriterByEmail(@PathVariable("token") String token, @PathVariable("email") String email)
             throws UserNotFoundException {
         Optional<Token> tokenCheck = tokenRepository.findByToken(token);
         if (tokenCheck.isPresent()){

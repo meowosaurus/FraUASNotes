@@ -5,15 +5,15 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class TokenDto implements Serializable {
-    private final UUID token;
+    private final String token;
     private final Long writerId;
 
-    public TokenDto(UUID token, Long writerId) {
+    public TokenDto(String token, Long writerId) {
         this.token = token;
         this.writerId = writerId;
     }
 
-    public UUID getToken() {
+    public String getToken() {
         return token;
     }
 

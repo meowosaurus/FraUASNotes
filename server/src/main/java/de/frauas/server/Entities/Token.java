@@ -10,7 +10,7 @@ import java.util.UUID;
 public class Token {
     @Id
     @Column(nullable = false, length = 20)
-    private UUID token;
+    private String token;
     @Column(unique = true, nullable = false)
     private Long writerId;
 
@@ -20,7 +20,7 @@ public class Token {
 
     public Token(Long writerId){
         this.writerId = writerId;
-        token = UUID.randomUUID();
+        token = UUID.randomUUID().toString();
         lastUsed = new Date();
     }
 
@@ -28,11 +28,11 @@ public class Token {
         lastUsed = new Date();
     }
 
-    public UUID getToken() {
+    public String getToken() {
         return token;
     }
 
-    public void setToken(UUID token) {
+    public void setToken(String token) {
         this.token = token;
     }
 
