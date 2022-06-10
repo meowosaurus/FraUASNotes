@@ -1,3 +1,4 @@
+import os
 import sys
 
 from PySide6.QtGui import Qt, QFont, QAction
@@ -13,7 +14,6 @@ class TextEditor(QMainWindow):
     textbox_1 = None
     filename = None
     path = None
-    x = True
 
     def __init__(self):
         super().__init__()
@@ -44,7 +44,6 @@ class TextEditor(QMainWindow):
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
 
-
     def create_textbox_1(self):
         # Create textbox
         self.textbox_1 = QTextEdit()
@@ -54,7 +53,6 @@ class TextEditor(QMainWindow):
         self.textbox_1.setFont(font)
         # Fontsize needs to be called again
         self.textbox_1.setFontPointSize(12)
-
         self.tb_1 = QWidget()  # Creates tb1 as widget
         self.tb_1.layout = QVBoxLayout()  # Creates layout of tab1_1
         self.tb_1.layout.addWidget(self.textbox_1)  # adds textbox to tab1_1
@@ -122,12 +120,12 @@ class TextEditor(QMainWindow):
     def save_file(self):
         data = ET.Element('root')
         element1 = ET.SubElement(data, 'Content')
-        s_elem1 = ET.SubElement(element1, 'Text')
-        s_elem1.text = self.textbox_1.toPlainText()
-        b_xml = ET.tostring(data)
+        element1.text = self.textbox_1.toPlainText()
+        b_xml = ET.tostring(element1, encoding='utf-8')
 
-        with open("current_file.xml", "wb") as f:
+        with open("XML_Files/current_file.xml", "wb") as f:
             f.write(b_xml)
+
 
     def new_file(self):
         self.textbox_2.setMarkdown(self.textbox_1.toPlainText())
