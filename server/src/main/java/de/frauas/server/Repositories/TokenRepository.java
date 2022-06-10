@@ -20,6 +20,7 @@ public interface TokenRepository extends JpaRepository<Token, String> {
     Optional<Token> findByToken(@Param("token")String token);
 
     @Modifying
+    @Transactional
     @Query("update Token token set token.lastUsed = :lastUsed WHERE token.writerId = :writerId")
     void updateToken(@Param("lastUsed") Date lastUsed, @Param("writerId")Long writerId);
 

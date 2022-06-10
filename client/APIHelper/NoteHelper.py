@@ -51,5 +51,7 @@ def getAllNotes(token) -> list:
 writer = Writer("a", "a", None, None, None)
 token = LoginHelper.login(writer)
 print(token.token)
+addNote(token, Note(None, "xx", "sdjbvljbövhjkvdkv", token.writerId))
+addNote(token, Note(None, "fuvbfv", "dhHÖDOIFOÖERG", token.writerId))
 notes = getAllNotes(token)
 print(notes)
