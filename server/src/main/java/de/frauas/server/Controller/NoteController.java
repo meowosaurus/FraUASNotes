@@ -48,6 +48,22 @@ public class NoteController {
         return ResponseEntity.ok().body("Token is not correct!");
     }
 
+    @PostMapping("/updateNote")
+    ResponseEntity<String> updateNote(@RequestHeader String token, @RequestBody NoteDto noteDto)
+            throws UserDoesNotExistException {
+        if(writerRepository.findById(noteDto.getWriterId()).isEmpty()){
+            throw new UserDoesNotExistException(noteDto.getWriterId());}
+        Optional<Token> tokenCheck = tokenRepository.findByToken(token);
+        if(tokenCheck.isPresent() &&
+                tokenCheck.get().getWriterId().equals(noteDto.getWriterId())) {
+            noteRepository.updateNote(noteDto.getTitle(), noteDto.getNote());
+            tokenCheck.get().updateLastUsed();
+            tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
+            return ResponseEntity.ok().body("Note: updated successfully!");
+        }
+        return ResponseEntity.ok().body("Token is not correct!");
+    }
+
     @GetMapping("/getAllNotes")
     ResponseEntity<String> getAllNotes(@RequestBody TokenDto tokenDto)
             throws NoNotesForWriterException{

@@ -21,7 +21,7 @@ public interface TokenRepository extends JpaRepository<Token, String> {
 
     @Modifying
     @Transactional
-    @Query("update Token token set token.lastUsed = :lastUsed WHERE token.writerId = :writerId")
+    @Query("UPDATE Token token SET token.lastUsed = :lastUsed WHERE token.writerId = :writerId")
     void updateToken(@Param("lastUsed") Date lastUsed, @Param("writerId")Long writerId);
 
     @Modifying
