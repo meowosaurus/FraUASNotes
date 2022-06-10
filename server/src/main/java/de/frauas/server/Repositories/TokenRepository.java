@@ -11,15 +11,16 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface TokenRepository extends JpaRepository<Token, UUID> {
+public interface TokenRepository extends JpaRepository<Token, String> {
 
     @Query("SELECT token FROM Token token WHERE token.writerId = :writerId")
     Optional<Token> findByWriterId(@Param("writerId")Long writerId);
 
     @Query("SELECT token FROM Token token WHERE token.token = :token")
-    Optional<Token> findByToken(@Param("token")UUID token);
+    Optional<Token> findByToken(@Param("token")String token);
 
     @Modifying
+    @Transactional
     @Query("update Token token set token.lastUsed = :lastUsed WHERE token.writerId = :writerId")
     void updateToken(@Param("lastUsed") Date lastUsed, @Param("writerId")Long writerId);
 

@@ -5,6 +5,10 @@ import requests
 from types import SimpleNamespace
 
 import sys
+
+import LoginHelper
+from Model.Writer import Writer
+
 sys.path.append('../')
 from Model.Note import Note
 
@@ -37,6 +41,17 @@ def getAllNotes(token) -> list:
         r = requests.get("http://localhost:8090/getAllNotes",
                          data=token.toJSON(),
                          headers=headers)
-        return json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
+        #return json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
+        return r.content
     except requests.exceptions.RequestException as e:
         return e
+
+
+
+writer = Writer("a", "a", None, None, None)
+token = LoginHelper.login(writer)
+print(token.token)
+addNote(token, Note(None, "xx", "sdjbvljbövhjkvdkv", token.writerId))
+addNote(token, Note(None, "fuvbfv", "dhHÖDOIFOÖERG", token.writerId))
+notes = getAllNotes(token)
+print(notes)

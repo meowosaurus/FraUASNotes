@@ -28,7 +28,7 @@ public class NoteController {
     private TokenRepository tokenRepository;
 
     @PostMapping("/addNote")
-    ResponseEntity<String> newNote(@RequestHeader UUID token, @RequestBody NoteDto noteDto)
+    ResponseEntity<String> newNote(@RequestHeader String token, @RequestBody NoteDto noteDto)
             throws UserDoesNotExistException {
         if(writerRepository.findById(noteDto.getWriterId()).isEmpty()){
                 throw new UserDoesNotExistException(noteDto.getWriterId());}
