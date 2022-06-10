@@ -28,13 +28,14 @@ class LoginWindow(QDialog):
         self.UName.move(135, 100)
 
         self.UPass = QLineEdit(self)
+        self.UPass.setEchoMode(QLineEdit.Password)
         self.UPass.resize(130, 20)
         self.UPass.move(135, 150)
 
         self.LoginButton = QPushButton('Login', self)
         self.LoginButton.clicked.connect(self.login)
 
-        self.LoginButton.move(168, 190)
+        self.LoginButton.move(160, 190)
 
         self.RegButton = QPushButton('Register', self)
         self.RegButton.clicked.connect(self.register)
