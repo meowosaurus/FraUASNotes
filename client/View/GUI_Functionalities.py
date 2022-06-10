@@ -1,4 +1,7 @@
 from PySide6.QtGui import QFont, QAction, QIcon, QKeySequence
+from PySide6.QtWidgets import QFileDialog, QPushButton
+from xml.etree import ElementTree as ET
+
 
 
 def bold_text(self, textbox):
@@ -18,7 +21,3 @@ def underline_text(self, textbox):
     self.underline_button.setShortcut(QKeySequence.Underline)
     self.underline_button.triggered.connect(lambda x: textbox.insertPlainText("____"))
 
-
-def login(self, username, password):
-    # creates writer obj - > sends to server - > gets real writer obj. 
-    pass

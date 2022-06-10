@@ -6,10 +6,14 @@ from types import SimpleNamespace
 
 import sys
 
+from Model.Writer import Writer
+
 sys.path.append('../')
+from Model.Note import Note
+from Model.Writer import Writer
+from Model.Token import Token
 
-
-def addNote(token, note):
+def addNote(token: Token, note: Note):
     headers = {
         'Accept': 'application/json',  # Accepting json strings from server
         'Content-Type': 'application/json',  # Sending json strings to server
@@ -44,9 +48,7 @@ def updateNote(token, note):
 '''
 Returns a list of all notes a Writer has 
 '''
-
-
-def getAllNotes(token) -> list:
+def getAllNotes(token: Token) -> list:
     headers = {
         'Accept': 'application/json',  # Accepting json strings from server
         'Content-Type': 'application/json',  # Sending json strings to server
@@ -59,3 +61,14 @@ def getAllNotes(token) -> list:
         return json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
     except requests.exceptions.RequestException as e:
         return e
+
+
+'''
+writer = Writer("a", "a", None, None, None)
+token = LoginHelper.login(writer)
+print(token.token)
+addNote(token, Note(None, "xx", "sdjbvljbövhjkvdkv", token.writerId))
+addNote(token, Note(None, "fuvbfv", "dhHÖDOIFOÖERG", token.writerId))
+notes = getAllNotes(token)
+print(notes)
+'''

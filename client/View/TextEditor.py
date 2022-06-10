@@ -3,7 +3,7 @@ import sys
 
 from PySide6.QtGui import Qt, QFont, QAction
 from PySide6.QtWidgets import QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
-    QToolBar, QMainWindow, QFileDialog, QApplication
+    QToolBar, QMainWindow, QFileDialog, QApplication, QPushButton
 
 import GUI_Functionalities
 
@@ -15,9 +15,9 @@ class TextEditor(QMainWindow):
     filename = None
     path = None
 
-    def __init__(self):
+    def __init__(self, parent):
         super().__init__()
-
+        self.parent = parent
         # Initiliaze buttons for later use
         self.underline_button = None
         self.italic_button = None
@@ -100,11 +100,14 @@ class TextEditor(QMainWindow):
         GUI_Functionalities.italic_text(self, self.textbox_1)
         GUI_Functionalities.underline_text(self, self.textbox_1)
 
+        self.back = QPushButton("Back", self)
+        self.back.clicked.connect(self.go_to_menu)
+
         # Adds buttons to toolbar
         self.toolbar_hori.addAction(self.bold_button)
         self.toolbar_hori.addAction(self.italic_button)
         self.toolbar_hori.addAction(self.underline_button)
-
+        self.toolbar_hori.addWidget(self.back)
         # Creates vertical toolbar
         self.toolbar_vert = QToolBar()
         self.toolbar_vert.setOrientation(Qt.Vertical)
@@ -130,6 +133,9 @@ class TextEditor(QMainWindow):
     def new_file(self):
         self.textbox_2.setMarkdown(self.textbox_1.toPlainText())
 
+    def go_to_menu(self):
+        self.parent.initMenu()
+        self.close()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

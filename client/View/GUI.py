@@ -9,12 +9,14 @@ import RegisterWindow
 import Menu
 
 sys.path.append('../')
-from Model import Note
+from Model import Note, Token, Writer
 
 class GUI(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        self.token: Token = None
+        self.writer: Writer = None
         self.UserLogin()
 
     def initMenu(self):
@@ -33,7 +35,7 @@ class GUI(QMainWindow):
         self.close()
 
     def OpenTextEditor(self, note: Note):
-        self.TextEditor = TextEditor()
+        self.TextEditor = TextEditor(self)
         self.TextEditor.show()
         self.close()
 

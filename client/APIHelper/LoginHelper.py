@@ -11,7 +11,7 @@ sys.path.append('../')
 from Model.Token import Token
 from Model.Writer import Writer
 
-def login(writer):
+def login(writer: Writer) -> Token:
     '''
     Logs in writer using the password and name. 
     Returns None, if login failed and token, if login succeeded 
@@ -37,7 +37,7 @@ def login(writer):
 def __toToken(SN: SimpleNamespace) -> Token: 
     return Token(SN.token, SN.writerId)
 
-def logout(token):
+def logout(token: Token):
     headers = {
         'Accept': 'application/json',  # Accepting json strings from server
         'Content-Type': 'application/json',  # Sending json strings to server

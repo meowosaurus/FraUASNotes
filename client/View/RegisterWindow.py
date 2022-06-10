@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QDialog, QLineEdit, QPushButton, QLabel
 
 import sys
 sys.path.append('../')
-from APIHelper import LoginHelper
+from APIHelper import WriterHelper
 from Model.Writer import Writer
 from View.GUI import GUI
 
@@ -74,7 +74,7 @@ class RegisterWindow(QDialog):
             self.QLabelMessage.setText("Passwords are unequal!")
             self.QLabelMessage.resize(280,20)
             return
-        reply = LoginHelper.addWriter(Writer(self.firstName.text(), self.password.text(), None, self.firstName.text(), self.email.text()))
+        reply = WriterHelper.addWriter(Writer(self.firstName.text(), self.password.text(), None, self.firstName.text(), self.email.text()))
         print(reply)
         if hasattr(reply, "writerId"):
             print(f"User {reply.userName} registered.")

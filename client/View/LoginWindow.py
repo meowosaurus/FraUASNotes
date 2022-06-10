@@ -50,12 +50,12 @@ class LoginWindow(QDialog):
         if hasattr(reply, "token"):
             print("Successfully logged in")
             self.hide()
-            #self.parent.token = reply
-            #self.parent.writer = WriterHelper.getWriter(reply)
+            self.parent.token = reply
+            self.parent.writer = WriterHelper.getWriter(reply)
             self.parent.initMenu()
         else:
             self.QLabelMessage.resize(300,30)
-            #self.QLabelMessage.setText(reply.Reply)
+            self.QLabelMessage.setText(reply.Reply)
 
     def register(self):
         self.parent.UserRegisers()
