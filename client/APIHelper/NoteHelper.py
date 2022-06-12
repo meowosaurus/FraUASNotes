@@ -58,10 +58,13 @@ def getAllNotes(token: Token) -> list:
         r = requests.get("http://localhost:8090/getAllNotes",
                          data=token.toJSON(),
                          headers=headers)
-        return json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
+        l = json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
+        if hasattr(l, "notes"):
+            return list(map(lambda x: Note(x.noteId, x.title, x.note, x.writerId), l.notes))
+        else:
+            return l
     except requests.exceptions.RequestException as e:
         return e
-
 
 '''
 writer = Writer("a", "a", None, None, None)
