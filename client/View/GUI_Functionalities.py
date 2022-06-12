@@ -1,7 +1,4 @@
-from PySide6.QtGui import QFont, QAction, QIcon, QKeySequence
-from PySide6.QtWidgets import QFileDialog, QPushButton
-from xml.etree import ElementTree as ET
-
+from PySide6.QtGui import QAction, QIcon, QKeySequence
 
 
 def bold_text(self, textbox):
@@ -21,3 +18,25 @@ def underline_text(self, textbox):
     self.underline_button.setShortcut(QKeySequence.Underline)
     self.underline_button.triggered.connect(lambda x: textbox.insertPlainText("____"))
 
+
+def heading_text(self, textbox):
+    self.heading_button = QAction(QIcon('Icons/heading-solid.png'), "Heading", self)
+    self.heading_button.setShortcut("Ctrl+H")
+    self.heading_button.triggered.connect(lambda x: textbox.insertPlainText("#"))
+
+
+def insertImage(self, textbox):
+    self.image_button = QAction(QIcon('Icons/image-solid.png'), "Heading", self)
+    self.image_button.triggered.connect(lambda x: textbox.insertPlainText("![alt text](image.jpg)"))
+
+
+def insertTable(self, textbox):
+    self.table_button = QAction(QIcon('Icons/table-solid.png'), "Heading", self)
+    self.table_button.triggered.connect(lambda x: textbox.insertPlainText("| Row | Row |\n| ----------- | ----------- |"))
+
+def changeFontSize(self, textbox):
+    pass
+
+
+def changeFontFamily(self, textbox):
+    pass

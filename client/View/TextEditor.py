@@ -1,13 +1,12 @@
-import os
 import sys
+import xml.etree.ElementTree as ET
 
+from PySide6 import QtCore
 from PySide6.QtGui import Qt, QFont, QAction
 from PySide6.QtWidgets import QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
     QToolBar, QMainWindow, QFileDialog, QApplication, QPushButton
 
 import GUI_Functionalities
-
-import xml.etree.ElementTree as ET
 
 
 class TextEditor(QMainWindow):
@@ -17,15 +16,20 @@ class TextEditor(QMainWindow):
 
     def __init__(self, parent):
         super().__init__()
+
         self.parent = parent
         # Initiliaze buttons for later use
         self.underline_button = None
         self.italic_button = None
         self.bold_button = None
+        self.heading_button = None
+        self.table_button = None
+        self.image_button = None
 
         # Configure window size + title
         self.resize(1920, 1080)
         self.setWindowTitle("FraUasNotes")
+
 
         # Call function to create file menu, textbox 1&2 and both toolbars
         self.create_textbox_1()
@@ -35,6 +39,8 @@ class TextEditor(QMainWindow):
         self.addToolBar(self.toolbar_hori)
         self.addToolBar(Qt.LeftToolBarArea, self.toolbar_vert)
         self.setMenuBar(self.menubar)
+
+
 
         # Add tabs to main layout
         main_layout = QGridLayout()  # Main Layout
@@ -48,6 +54,8 @@ class TextEditor(QMainWindow):
         # Create textbox
         self.textbox_1 = QTextEdit()
 
+        self.textbox_1.acceptRichText()
+        self.textbox_1.installEventFilter(self)
         # Set Fontsize and Fontstyle
         font = QFont('Times', 12)
         self.textbox_1.setFont(font)
@@ -58,7 +66,7 @@ class TextEditor(QMainWindow):
         self.tb_1.layout.addWidget(self.textbox_1)  # adds textbox to tab1_1
         self.tb_1.setLayout(self.tb_1.layout)
         self.tabs1 = QTabWidget()  # creates tabwidget
-        self.tabs1.addTab(self.tb_1, 'Tab 1')  # adds tab1_1 to tab1 + description
+        self.tabs1.addTab(self.tb_1, 'Editor')  # adds tab1_1 to tab1 + description
 
     def create_textbox_2(self):
         self.textbox_2 = QTextEdit(readOnly=True)
@@ -67,7 +75,7 @@ class TextEditor(QMainWindow):
         self.tb_2.layout.addWidget(self.textbox_2)
         self.tb_2.setLayout(self.tb_2.layout)
         self.tabs2 = QTabWidget()
-        self.tabs2.addTab(self.tb_2, 'Tab 2')
+        self.tabs2.addTab(self.tb_2, 'Markdown Preview')
 
     def create_menu(self):
         self.menubar = QMenuBar()  # adds Menubar
@@ -99,6 +107,9 @@ class TextEditor(QMainWindow):
         GUI_Functionalities.bold_text(self, self.textbox_1)
         GUI_Functionalities.italic_text(self, self.textbox_1)
         GUI_Functionalities.underline_text(self, self.textbox_1)
+        GUI_Functionalities.heading_text(self, self.textbox_1)
+        GUI_Functionalities.insertTable(self,self.textbox_1)
+        GUI_Functionalities.insertImage(self, self.textbox_1)
 
         self.back = QPushButton("Back", self)
         self.back.clicked.connect(self.go_to_menu)
@@ -107,6 +118,9 @@ class TextEditor(QMainWindow):
         self.toolbar_hori.addAction(self.bold_button)
         self.toolbar_hori.addAction(self.italic_button)
         self.toolbar_hori.addAction(self.underline_button)
+        self.toolbar_hori.addAction(self.heading_button)
+        self.toolbar_hori.addAction(self.table_button)
+        self.toolbar_hori.addAction(self.image_button)
         self.toolbar_hori.addWidget(self.back)
         # Creates vertical toolbar
         self.toolbar_vert = QToolBar()
@@ -131,14 +145,23 @@ class TextEditor(QMainWindow):
 
 
     def new_file(self):
-        self.textbox_2.setMarkdown(self.textbox_1.toPlainText())
+        pass
 
     def go_to_menu(self):
         self.parent.initMenu()
         self.close()
 
+    def eventFilter(self, obj, event):
+        if obj is self.textbox_1 and event.type() == QtCore.QEvent.KeyPress:
+            if event.key() == QtCore.Qt.Key_Space:
+                self.textbox_1.insertPlainText(" ")
+                self.textbox_2.setMarkdown(self.textbox_1.toPlainText())
+                return True
+        return super(TextEditor, self).eventFilter(obj, event)
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    w = TextEditor()
+    w = TextEditor(parent=None)
     w.show()
     app.exec()
