@@ -2,9 +2,11 @@ import sys
 import xml.etree.ElementTree as ET
 
 from PySide6 import QtCore
+from PySide6.QtCore import QSize
 from PySide6.QtGui import Qt, QFont, QAction
 from PySide6.QtWidgets import QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
-    QToolBar, QMainWindow, QFileDialog, QApplication, QPushButton
+    QToolBar, QMainWindow, QFileDialog, QApplication, QPushButton, QListWidget
+from logzero import xrange
 
 import GUI_Functionalities
 
@@ -30,22 +32,20 @@ class TextEditor(QMainWindow):
         self.resize(1920, 1080)
         self.setWindowTitle("FraUasNotes")
 
-
         # Call function to create file menu, textbox 1&2 and both toolbars
         self.create_textbox_1()
         self.create_textbox_2()
-        self.create_toolbars()
+        self.create_toolbar()
         self.create_menu()
+        self.createList()
         self.addToolBar(self.toolbar_hori)
-        self.addToolBar(Qt.LeftToolBarArea, self.toolbar_vert)
         self.setMenuBar(self.menubar)
-
-
 
         # Add tabs to main layout
         main_layout = QGridLayout()  # Main Layout
-        main_layout.addWidget(self.tabs1, 0, 1)
-        main_layout.addWidget(self.tabs2, 0, 2)
+        main_layout.addWidget(self.tabs1, 0, 4, 2, 1)
+        main_layout.addWidget(self.tabs2, 0, 6, 2, 1)
+        main_layout.addWidget(self.list, 0, 0, 1, 3)
         widget = QWidget()
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
@@ -99,7 +99,7 @@ class TextEditor(QMainWindow):
         saveFile.triggered.connect(self.save_file)
         file_menu.addAction(saveFile)
 
-    def create_toolbars(self):
+    def create_toolbar(self):
         # Creates toolbar horizontal
         self.toolbar_hori = QToolBar()
 
@@ -108,7 +108,7 @@ class TextEditor(QMainWindow):
         GUI_Functionalities.italic_text(self, self.textbox_1)
         GUI_Functionalities.underline_text(self, self.textbox_1)
         GUI_Functionalities.heading_text(self, self.textbox_1)
-        GUI_Functionalities.insertTable(self,self.textbox_1)
+        GUI_Functionalities.insertTable(self, self.textbox_1)
         GUI_Functionalities.insertImage(self, self.textbox_1)
 
         self.back = QPushButton("Back", self)
@@ -123,8 +123,12 @@ class TextEditor(QMainWindow):
         self.toolbar_hori.addAction(self.image_button)
         self.toolbar_hori.addWidget(self.back)
         # Creates vertical toolbar
-        self.toolbar_vert = QToolBar()
-        self.toolbar_vert.setOrientation(Qt.Vertical)
+
+    def createList(self):
+        self.list = QListWidget()
+        self.list.addItem("test")
+
+
 
     def file_open(self):
         self.filename = QFileDialog.getOpenFileName()
@@ -142,7 +146,6 @@ class TextEditor(QMainWindow):
 
         with open("XML_Files/current_file.xml", "wb") as f:
             f.write(b_xml)
-
 
     def new_file(self):
         pass

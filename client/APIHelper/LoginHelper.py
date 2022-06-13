@@ -6,10 +6,12 @@ import requests
 from types import SimpleNamespace
 
 import sys
+
 sys.path.append('../')
 
 from Model.Token import Token
 from Model.Writer import Writer
+
 
 def login(writer: Writer) -> Token:
     '''
@@ -23,19 +25,21 @@ def login(writer: Writer) -> Token:
     }
     try:
         r = requests.post("http://localhost:8090/login",
-                         data=writer.toJSON(),
-                         headers=headers)
+                          data=writer.toJSON(),
+                          headers=headers)
         reply = json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
         if hasattr(reply, "token") & hasattr(reply, "writerId"):
             return __toToken(reply)
-        else: 
+        else:
             print(reply)
             return reply
     except requests.exceptions.RequestException as e:
         return e
 
-def __toToken(SN: SimpleNamespace) -> Token: 
+
+def __toToken(SN: SimpleNamespace) -> Token:
     return Token(SN.token, SN.writerId)
+
 
 def logout(token: Token):
     headers = {
@@ -51,5 +55,5 @@ def logout(token: Token):
     except requests.exceptions.RequestException as e:
         return e
 
-#print(login(Writer("H", "h", None, None, None)).token)
-#print(login(Writer("H", "h", None, None, None)).writerId)
+# print(login(Writer("H", "h", None, None, None)).token)
+# print(login(Writer("H", "h", None, None, None)).writerId)
