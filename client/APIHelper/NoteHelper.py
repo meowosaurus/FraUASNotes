@@ -3,15 +3,13 @@
 import json
 import requests
 from types import SimpleNamespace
+from Model.Note import Note
+from Model.Token import Token
 
 import sys
 
-from Model.Writer import Writer
-
 sys.path.append('../')
-from Model.Note import Note
-from Model.Writer import Writer
-from Model.Token import Token
+
 
 def addNote(token: Token, note: Note):
     headers = {
@@ -48,6 +46,8 @@ def updateNote(token, note):
 '''
 Returns a list of all notes a Writer has 
 '''
+
+
 def getAllNotes(token: Token) -> list:
     headers = {
         'Accept': 'application/json',  # Accepting json strings from server
@@ -58,13 +58,16 @@ def getAllNotes(token: Token) -> list:
         r = requests.get("http://localhost:8090/getAllNotes",
                          data=token.toJSON(),
                          headers=headers)
-        l = json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
+        s = r.content.replace(b"\n", b"\\n")
+        l = json.loads(s, object_hook=lambda d: SimpleNamespace(**d))
+        print(l)
         if hasattr(l, "notes"):
             return list(map(lambda x: Note(x.noteId, x.title, x.note, x.writerId), l.notes))
         else:
             return l
     except requests.exceptions.RequestException as e:
         return e
+
 
 '''
 writer = Writer("a", "a", None, None, None)

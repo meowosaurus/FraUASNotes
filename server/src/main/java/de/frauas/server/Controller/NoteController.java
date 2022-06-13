@@ -4,7 +4,6 @@ import de.frauas.server.DTOs.NoteDto;
 import de.frauas.server.DTOs.TokenDto;
 import de.frauas.server.Entities.Note;
 import de.frauas.server.Entities.Token;
-import de.frauas.server.Exceptions.NoNotesForWriterException;
 import de.frauas.server.Exceptions.UserDoesNotExistException;
 import de.frauas.server.Repositories.NoteRepository;
 import de.frauas.server.Repositories.TokenRepository;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 public class NoteController {
@@ -65,14 +63,13 @@ public class NoteController {
     }
 
     @GetMapping("/getAllNotes")
-    ResponseEntity<String> getAllNotes(@RequestBody TokenDto tokenDto)
-            throws NoNotesForWriterException{
+    ResponseEntity<String> getAllNotes(@RequestBody TokenDto tokenDto){
         Optional<Token> tokenCheck = tokenRepository.findByToken(tokenDto.getToken());
         if(tokenCheck.isPresent() &&
                 tokenCheck.get().getWriterId().equals(tokenDto.getWriterId())) {
             Iterable<Note> notes = noteRepository.findByWriterId(tokenDto.getWriterId());
             if (IterableUtils.size(notes) == 0)
-                throw new NoNotesForWriterException(tokenDto.getWriterId());
+                return ResponseEntity.badRequest().body("{\"reply\":\"No notes for writer!\"}");
 
             //HttpHeaders responseHeaders = new HttpHeaders();
             //responseHeaders.set("Content-Encoding", "gzip");
@@ -90,6 +87,6 @@ public class NoteController {
                     //.headers(responseHeaders)
                     .body(s);
         }
-        return ResponseEntity.ok().body("Token is not correct!");
+        return ResponseEntity.badRequest().body("{\"reply\":\"Token is not correct!\"}");
     }
 }
