@@ -1,4 +1,5 @@
 from PySide6.QtGui import QAction, QIcon, QKeySequence
+from PySide6.QtWidgets import QFileDialog
 
 
 def bold_text(self, textbox):
@@ -27,7 +28,7 @@ def heading_text(self, textbox):
 
 def insertImage(self, textbox):
     self.image_button = QAction(QIcon('Icons/image-solid.png'), "Heading", self)
-    self.image_button.triggered.connect(lambda x: textbox.insertPlainText("![alt text](image.jpg)"))
+    self.image_button.triggered.connect(lambda x: textbox.insertPlainText("![alt text](" + getFileName(self) + ")"))
 
 
 def insertTable(self, textbox):
@@ -40,3 +41,7 @@ def changeFontSize(self, textbox):
 
 def changeFontFamily(self, textbox):
     pass
+
+def getFileName(self):
+    filename = QFileDialog.getOpenFileName(filter="*.jpg *.png")
+    return filename[0]

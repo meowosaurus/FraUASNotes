@@ -2,11 +2,9 @@ import sys
 import xml.etree.ElementTree as ET
 
 from PySide6 import QtCore
-from PySide6.QtCore import QSize
-from PySide6.QtGui import Qt, QFont, QAction
+from PySide6.QtGui import QFont, QAction
 from PySide6.QtWidgets import QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
     QToolBar, QMainWindow, QFileDialog, QApplication, QPushButton, QListWidget
-from logzero import xrange
 
 import GUI_Functionalities
 
@@ -56,16 +54,16 @@ class TextEditor(QMainWindow):
 
         self.textbox_1.acceptRichText()
         self.textbox_1.installEventFilter(self)
-        # Set Fontsize and Fontstyle
+        # Set Font size and Fontstyle
         font = QFont('Times', 12)
         self.textbox_1.setFont(font)
-        # Fontsize needs to be called again
+        # Font size needs to be called again
         self.textbox_1.setFontPointSize(12)
         self.tb_1 = QWidget()  # Creates tb1 as widget
         self.tb_1.layout = QVBoxLayout()  # Creates layout of tab1_1
         self.tb_1.layout.addWidget(self.textbox_1)  # adds textbox to tab1_1
         self.tb_1.setLayout(self.tb_1.layout)
-        self.tabs1 = QTabWidget()  # creates tabwidget
+        self.tabs1 = QTabWidget()  # creates tab widget
         self.tabs1.addTab(self.tb_1, 'Editor')  # adds tab1_1 to tab1 + description
 
     def create_textbox_2(self):
@@ -89,10 +87,10 @@ class TextEditor(QMainWindow):
         newFile.triggered.connect(self.new_file)
         file_menu.addAction(newFile)
 
-        openFile = QAction("&Open File", self)
-        openFile.setShortcut("Ctrl+O")
-        openFile.triggered.connect(self.file_open)
-        file_menu.addAction(openFile)
+        openFileFromDisk = QAction("&Open File from Disk", self)
+        openFileFromDisk.setShortcut("Ctrl+O")
+        openFileFromDisk.triggered.connect(self.file_open_disk)
+        file_menu.addAction(openFileFromDisk)
 
         saveFile = QAction("&Save File", self)
         saveFile.setShortcut("Ctrl+S")
@@ -128,9 +126,9 @@ class TextEditor(QMainWindow):
         self.list = QListWidget()
         self.list.addItem("test")
 
+        #TODO: Load available filenames from server into list => double clicked => open file
 
-
-    def file_open(self):
+    def file_open_disk(self):
         self.filename = QFileDialog.getOpenFileName()
         self.path = self.filename[0]
         with open(self.path, 'r') as f:
