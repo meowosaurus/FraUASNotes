@@ -34,11 +34,13 @@ class Menu(QWidget):
         self.VBox2 = QVBoxLayout()
         self.HBox1.addLayout(self.VBox2)
 
+        #n = [Note(1, "eins", "hallo was geht ab", self.parent.writer.writerId)]
 
-
-        for note in self.notes:
-            self.VBox2.addWidget(self._addNote(note))
-
+        try:
+            for note in self.notes:
+                self.VBox2.addWidget(self._addNoteButton(note))
+        except TypeError:
+            pass
 
         self.VBox2.addStretch(1)
 
@@ -73,20 +75,19 @@ class Menu(QWidget):
     '''
         This function returns one Button that opens a given Note in TextEditor
     '''
-    def _addNote(self, note: Note) -> QPushButton:
+    def _addNoteButton(self, note: Note) -> QPushButton:
         def clickButton():
             self.parent.OpenTextEditor(note)
             self.close()
         button = QPushButton(note.title, self)
         button.clicked.connect(clickButton)
-        button.resize(300, 500)
         return button
 
     def _buildTable(self, notes: list):
         self.layout = QVBoxLayout(self)
         try:
             for note in notes:
-                self.layout.addWidget(self._addNote(note))
+                self.layout.addWidget(self._addNoteButton(note))
         except TypeError:
             pass
         self.layout.addStretch(1)
@@ -99,7 +100,6 @@ class Menu(QWidget):
 
     def _clickNewNote(self):
         # TODO: hier muss addNote ID etc zurückgeben
-        note = None
-        #note = NoteHelper.addNote(self.parent.token, self.parent.writer)
-        self.parent.OpenTextEditor(note)
+        note = Note(None, "New Note", None, None)
+        self.parent.OpenTextEditor(note, True)
         self.close()

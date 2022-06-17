@@ -34,8 +34,8 @@ class GUI(QMainWindow):
         self.RegisterWindow.show()
         self.close()
 
-    def OpenTextEditor(self, note: Note):
-        self.TextEditor = TextEditor(self)
+    def OpenTextEditor(self, note: Note, newNote = False):
+        self.TextEditor = TextEditor(self, note,newNote)
         self.TextEditor.show()
         self.close()
 

@@ -2,7 +2,7 @@ import dataclasses
 import json
 
 class Note(object):
-    def __init__(self, noteId, title, note, writerId):
+    def __init__(self, noteId, title: str, note, writerId):
         self.noteId = noteId
         self.title = title
         self.note = note

@@ -2,21 +2,25 @@ import sys
 import xml.etree.ElementTree as ET
 
 from PySide6 import QtCore
-from PySide6.QtGui import QFont, QAction
-from PySide6.QtWidgets import QWidget, QTabWidget, QGridLayout, QVBoxLayout, QTextEdit, QMenuBar, \
-    QToolBar, QMainWindow, QFileDialog, QApplication, QPushButton, QListWidget
+from PySide6.QtGui import Qt, QFont, QAction
+from PySide6.QtWidgets import *
 
 import GUI_Functionalities
 
+import sys
+sys.path.append("../")
+from APIHelper import NoteHelper
+from Model.Note import Note
 
 class TextEditor(QMainWindow):
     textbox_1 = None
     filename = None
     path = None
 
-    def __init__(self, parent):
+    def __init__(self, parent, note ,newNote = False):
         super().__init__()
-
+        self.note = note
+        self.newNote = newNote
         self.parent = parent
         # Initialize buttons for later use
         self.underline_button = None
@@ -51,6 +55,7 @@ class TextEditor(QMainWindow):
     def create_textbox_1(self):
         # Create textbox
         self.textbox_1 = QTextEdit()
+        self.textbox_1.setText(self.note.note)
 
         self.textbox_1.acceptRichText()
         self.textbox_1.installEventFilter(self)
@@ -111,6 +116,13 @@ class TextEditor(QMainWindow):
 
         self.back = QPushButton("Back", self)
         self.back.clicked.connect(self.go_to_menu)
+        self.nameField = QLineEdit(self)
+        self.nameField.resize(self.width()*0.25, self.height())
+        try:
+            self.nameField.setText(self.note.title)
+        except AttributeError:
+            print("No title found")
+            pass
 
         # Adds buttons to toolbar
         self.toolbar_hori.addAction(self.bold_button)
@@ -119,6 +131,7 @@ class TextEditor(QMainWindow):
         self.toolbar_hori.addAction(self.heading_button)
         self.toolbar_hori.addAction(self.table_button)
         self.toolbar_hori.addAction(self.image_button)
+        self.toolbar_hori.addWidget(self.nameField)
         self.toolbar_hori.addWidget(self.back)
         # Creates vertical toolbar
 
@@ -145,10 +158,14 @@ class TextEditor(QMainWindow):
         with open("XML_Files/current_file.xml", "wb") as f:
             f.write(b_xml)
 
+    # I think this is not needed, mfG Hendrik
     def new_file(self):
         pass
 
     def go_to_menu(self):
+        if self.newNote:
+            NoteHelper.addNote(self.parent.token, Note(None, self.nameField.text() ,self.textbox_1.toPlainText(), self.parent.writer.writerId))
+        self.parent.currentNote = None
         self.parent.initMenu()
         self.close()
 
