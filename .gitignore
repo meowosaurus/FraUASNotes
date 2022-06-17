@@ -219,4 +219,4 @@ compile_commands.json
 
 *_qmlcache.qrc
 
-server/src/main/resources/application.properties
+./server/src/main/resources/application.properties
