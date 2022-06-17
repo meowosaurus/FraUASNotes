@@ -18,7 +18,7 @@ class TextEditor(QMainWindow):
         super().__init__()
 
         self.parent = parent
-        # Initiliaze buttons for later use
+        # Initialize buttons for later use
         self.underline_button = None
         self.italic_button = None
         self.bold_button = None
