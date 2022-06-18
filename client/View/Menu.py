@@ -21,9 +21,9 @@ class Menu(QWidget):
     def initMe(self):
         self.setGeometry(self.top, self.left, self.width, self.height)
         self.setWindowTitle("FraUasNotes")
-        self.notes = NoteHelper.getAllNotes(self.parent.token)
+        self.parent.allNotes = NoteHelper.getAllNotes(self.parent.token)
 
-
+        # Buttons
         self.newNoteButton = QPushButton("New note", self)
         self.newNoteButton.clicked.connect(self._clickNewNote)
         self.logoutButton = QPushButton ("Log out", self)
@@ -34,43 +34,28 @@ class Menu(QWidget):
         self.VBox2 = QVBoxLayout()
         self.HBox1.addLayout(self.VBox2)
 
-        #n = [Note(1, "eins", "hallo was geht ab", self.parent.writer.writerId)]
-
+        # Load notes
+        self.QnoteList = QListWidget()
+        self.QnoteList.setStyleSheet("QListWidget{width: 70%; height: 100%; border-width: 30px; font-size: large;} QListWidget::Item::{background-color: black ;}")
+        self.VBox2.addWidget(self.QnoteList)
         try:
-            for note in self.notes:
-                self.VBox2.addWidget(self._addNoteButton(note))
-        except TypeError:
+            for note in self.parent.allNotes:
+                tempItem = QListWidgetItem(note.title)
+                self.QnoteList.addItem(tempItem)
+        except:
             pass
+        self.QnoteList.itemClicked.connect(self._clickNote)
 
-        self.VBox2.addStretch(1)
-
-        self.HBox1.addStretch(1)
         self.VBox1 = QVBoxLayout()
         self.HBox1.addLayout(self.VBox1)
         self.VBox1.addWidget(self.newNoteButton)
         self.VBox1.addWidget(self.logoutButton)
         self.VBox1.addStretch(1)
-        '''
-        # TODO: das richtig ins lprint(self.parent.token.token)
-        #         print(self.parent.token.writerId)
-        #         allNotes = NoteHelper.getAllNotes(self.parent.token)
-        #         print(allNotes)
-        #         self._buildTable(allNotes)
-        #         self.show()
-        #
-        #         n = Note(None, "kjlj", "LJlk", None)
-        #
-        #         def clickButton():
-        #             self.parent.OpenTextEditor(n)
-        #             self.close()
-        #
-        #         self.button = QPushButton(n.title, self)
-        #         self.button.clicked.connect(clickButton)ayout einbauen
-        #print(self.parent.writer)
-        '''
 
-
-
+    def _clickNote(self):
+        for note in self.parent.allNotes:
+            if self.QnoteList.currentItem().text() == note.title:
+                self.parent.OpenTextEditor(note)
 
     '''
         This function returns one Button that opens a given Note in TextEditor

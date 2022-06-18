@@ -3,12 +3,14 @@
 import json
 import requests
 from types import SimpleNamespace
-from Model.Note import Note
-from Model.Token import Token
 
 import sys
-
 sys.path.append('../')
+
+from Model.Note import Note
+from Model.Token import Token
+from Model.Writer import Writer
+
 
 
 def addNote(token: Token, note: Note):
@@ -64,17 +66,26 @@ def getAllNotes(token: Token) -> list:
         if hasattr(l, "notes"):
             return list(map(lambda x: Note(x.noteId, x.title, x.note, x.writerId), l.notes))
         else:
-            return l
+            return []
     except requests.exceptions.RequestException as e:
         return e
 
-
 '''
-writer = Writer("a", "a", None, None, None)
+import LoginHelper
+
+writer = Writer("p", "p", None, None, None)
 token = LoginHelper.login(writer)
 print(token.token)
-addNote(token, Note(None, "xx", "sdjbvljbövhjkvdkv", token.writerId))
-addNote(token, Note(None, "fuvbfv", "dhHÖDOIFOÖERG", token.writerId))
 notes = getAllNotes(token)
 print(notes)
+
+newnote = Note(notes[0].noteId, notes[0].title, "was geht ab", notes[0].writerId)
+
+print("----- upating note 1")
+print(updateNote(token, newnote))
+
+notes2 = getAllNotes(token)
+for n in notes2:
+    print(n.title)
+    print(n.note)
 '''
