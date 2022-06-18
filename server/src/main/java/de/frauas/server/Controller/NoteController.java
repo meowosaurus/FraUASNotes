@@ -54,7 +54,7 @@ public class NoteController {
         Optional<Token> tokenCheck = tokenRepository.findByToken(token);
         if(tokenCheck.isPresent() &&
                 tokenCheck.get().getWriterId().equals(noteDto.getWriterId())) {
-            noteRepository.updateNote(noteDto.getTitle(), noteDto.getNote());
+            noteRepository.updateNote(noteDto.getTitle(), noteDto.getNote(), noteDto.getId());
             tokenCheck.get().updateLastUsed();
             tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
             return ResponseEntity.ok().body("Note: updated successfully!");
