@@ -17,6 +17,7 @@ public class Note {
             }
     )
     private Long noteId;
+    @Column(unique = true)
     private String title;
     private String note;
     private Long writerId;
