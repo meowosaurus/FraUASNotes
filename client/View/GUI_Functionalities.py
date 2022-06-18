@@ -1,5 +1,7 @@
 from PySide6.QtGui import QAction, QIcon, QKeySequence
-from PySide6.QtWidgets import QFileDialog
+from PySide6.QtWidgets import QFileDialog, QListWidget
+
+from APIHelper import NoteHelper
 
 
 def bold_text(self, textbox):

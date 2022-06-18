@@ -2,23 +2,24 @@ import sys
 import xml.etree.ElementTree as ET
 
 from PySide6 import QtCore
-from PySide6.QtGui import Qt, QFont, QAction
+from PySide6.QtGui import QFont, QAction
 from PySide6.QtWidgets import *
 
 import GUI_Functionalities
 
-import sys
 sys.path.append("../")
 from APIHelper import NoteHelper
 from Model.Note import Note
+
 
 class TextEditor(QMainWindow):
     textbox_1 = None
     filename = None
     path = None
 
-    def __init__(self, parent, note ,newNote = False):
+    def __init__(self, parent, note, newNote=False):
         super().__init__()
+        self.list = None
         self.note = note
         self.newNote = newNote
         self.parent = parent
@@ -117,7 +118,7 @@ class TextEditor(QMainWindow):
         self.back = QPushButton("Back", self)
         self.back.clicked.connect(self.go_to_menu)
         self.nameField = QLineEdit(self)
-        self.nameField.resize(self.width()*0.25, self.height())
+        self.nameField.resize(self.width() * 0.25, self.height())
         try:
             self.nameField.setText(self.note.title)
         except AttributeError:
@@ -137,9 +138,17 @@ class TextEditor(QMainWindow):
 
     def createList(self):
         self.list = QListWidget()
-        self.list.addItem("test")
+        notes = NoteHelper.getAllNotes(self.parent.token)
+        for note in notes:
+            self.list.addItem(note.title)
 
-        #TODO: Load available filenames from server into list => double clicked => open file
+        self.list.itemClicked.connect(self.clicked)
+
+    def clicked(self, title):
+        notes = NoteHelper.getAllNotes(self.parent.token)
+        for note in notes:
+            if title.text() == note.title:
+                self.textbox_1.setText(note.note)
 
     def file_open_disk(self):
         self.filename = QFileDialog.getOpenFileName()
@@ -164,7 +173,8 @@ class TextEditor(QMainWindow):
 
     def go_to_menu(self):
         if self.newNote:
-            NoteHelper.addNote(self.parent.token, Note(None, self.nameField.text() ,self.textbox_1.toPlainText(), self.parent.writer.writerId))
+            NoteHelper.addNote(self.parent.token, Note(None, self.nameField.text(), self.textbox_1.toPlainText(),
+                                                       self.parent.writer.writerId))
         self.parent.currentNote = None
         self.parent.initMenu()
         self.close()
