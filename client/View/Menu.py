@@ -56,6 +56,7 @@ class Menu(QWidget):
         for note in self.parent.allNotes:
             if self.QnoteList.currentItem().text() == note.title:
                 self.parent.OpenTextEditor(note)
+                self.close()
 
     '''
         This function returns one Button that opens a given Note in TextEditor
