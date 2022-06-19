@@ -1,15 +1,15 @@
 import sys
-import time
 
 from PySide6.QtWidgets import *
 
-from TextEditor import TextEditor
 import LoginWindow
-import RegisterWindow
 import Menu
+import RegisterWindow
+from TextEditor import TextEditor
 
 sys.path.append('../')
 from Model import Note, Token, Writer
+
 
 class GUI(QMainWindow):
 
@@ -34,12 +34,19 @@ class GUI(QMainWindow):
         self.RegisterWindow.show()
         self.close()
 
-    def OpenTextEditor(self, note: Note, newNote = False):
-        self.TextEditor = TextEditor(self, note,newNote)
+    def OpenTextEditor(self, note: Note, newNote=False):
+        self.TextEditor = TextEditor(self, note, newNote)
         self.TextEditor.show()
         self.close()
 
+
 if __name__ == '__main__':  # Main for testing purposes
     app = QApplication(sys.argv)
+    # Open the sqq styles file and read in the css-alike styling code
+    with open('style.qss', 'r') as f:
+        style = f.read()
+        # Set the stylesheet of the application
+        app.setStyleSheet(style)
+    app.setStyle('Fusion')
     gui = GUI()
     sys.exit(app.exec())

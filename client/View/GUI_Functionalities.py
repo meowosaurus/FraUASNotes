@@ -1,7 +1,5 @@
 from PySide6.QtGui import QAction, QIcon, QKeySequence
-from PySide6.QtWidgets import QFileDialog, QListWidget
-
-from APIHelper import NoteHelper
+from PySide6.QtWidgets import QFileDialog
 
 
 def bold_text(self, textbox):
@@ -29,12 +27,12 @@ def heading_text(self, textbox):
 
 
 def insertImage(self, textbox):
-    self.image_button = QAction(QIcon('Icons/image-solid.png'), "Heading", self)
+    self.image_button = QAction(QIcon('Icons/image-solid.png'), "Insert Image", self)
     self.image_button.triggered.connect(lambda x: textbox.insertPlainText("![alt text](" + getFileName(self) + ")"))
 
 
 def insertTable(self, textbox):
-    self.table_button = QAction(QIcon('Icons/table-solid.png'), "Heading", self)
+    self.table_button = QAction(QIcon('Icons/table-solid.png'), "Insert table", self)
     self.table_button.triggered.connect(lambda x: textbox.insertPlainText("| Row | Row |\n| ----------- | ----------- |"))
 
 def changeFontSize(self, textbox):

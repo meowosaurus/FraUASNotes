@@ -1,15 +1,11 @@
-from PySide6.QtGui import Qt
-from PySide6.QtWidgets import QDialog, QLineEdit, QPushButton, QLabel, QVBoxLayout
-
 import sys
 
+from PySide6.QtWidgets import QDialog, QLineEdit, QPushButton, QLabel
+
 sys.path.append('../')
-from GUI import GUI
 from APIHelper import LoginHelper
 from APIHelper import WriterHelper
 from Model.Writer import Writer
-from View.GUI import GUI
-from View.RegisterWindow import RegisterWindow
 
 
 class LoginWindow(QDialog):
@@ -18,9 +14,8 @@ class LoginWindow(QDialog):
         self.parent = parent
         self.setWindowTitle("User Login")
 
-        self.QLabel = QLabel("Enter your login data...", self)
-        print(self.QLabel.size())
-        self.QLabel.move(130, 60)
+        self.QLabel = QLabel("Welcom to FRA-UAS-Notes!\nPlease enter your credentials.", self)
+        self.QLabel.move(123, 35)
 
         self.resize(400, 300)
         self.UName = QLineEdit(self)

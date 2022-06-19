@@ -1,0 +1,39 @@
+QDialog, QMainWindow, QMenuBar{
+ background-color: #1f1e1e;
+}
+
+QLabel{
+    color: white;
+}
+
+QPushButton, QLineEdit, QListWidget, QToolBar, QTabWidget{
+    background-color: #323333;
+    color: white;
+}
+
+QToolBar {
+    background-color: #323333;
+    border-width: 1px;
+    border-radius: 15px;
+    padding: 10px;
+    spacing: 10px;
+}
+
+QTextEdit{
+    background-color: #e6eded;
+    color: white;
+}
+
+QToolButton{
+    background-color: white;
+    border-style: outset;
+    border-width: 1px;
+    border-radius: 15px;
+    padding: 2px;
+}
+
+QToolButton:hover{
+   background-color: white;
+   border: 1px #ff8880;
+   border-radius: 15px;
+}

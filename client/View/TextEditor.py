@@ -12,7 +12,6 @@ sys.path.append("../")
 from APIHelper import NoteHelper
 from Model.Note import Note
 
-
 class TextEditor(QMainWindow):
     textbox_1 = None
     filename = None
@@ -34,23 +33,23 @@ class TextEditor(QMainWindow):
         self.image_button = None
 
         # Configure window size + title
-        self.resize(1920, 1080)
+        self.resize(1910, 1080)
         self.setWindowTitle("FraUasNotes")
 
         # Call function to create file menu, textbox 1&2 and both toolbars
         self.create_textbox_1()
         self.create_textbox_2()
         self.create_toolbar()
-        self.create_menu()
+        #self.create_menu()
         self.createList()
-        self.addToolBar(self.toolbar_hori)
-        self.setMenuBar(self.menubar)
+        #self.setMenuBar(self.menubar)
 
         # Add tabs to main layout
         main_layout = QGridLayout()  # Main Layout
-        main_layout.addWidget(self.tabs1, 0, 4, 2, 1)
-        main_layout.addWidget(self.tabs2, 0, 6, 2, 1)
-        main_layout.addWidget(self.list, 0, 0, 1, 3)
+        main_layout.addWidget(self.toolbar_hori,0, 0, 1, 8)
+        main_layout.addWidget(self.tabs1, 1, 4, 2, 1)
+        main_layout.addWidget(self.tabs2, 1, 6, 2, 1)
+        main_layout.addWidget(self.list, 1, 0, 1, 3)
         widget = QWidget()
         widget.setLayout(main_layout)
         self.setCentralWidget(widget)
@@ -59,7 +58,6 @@ class TextEditor(QMainWindow):
         # Create textbox
         self.textbox_1 = QTextEdit()
         self.textbox_1.setText(self.note.note)
-
         self.textbox_1.acceptRichText()
         self.textbox_1.installEventFilter(self)
         # Set Font size and Fontstyle
@@ -68,11 +66,13 @@ class TextEditor(QMainWindow):
         # Font size needs to be called again
         self.textbox_1.setFontPointSize(12)
         self.tb_1 = QWidget()  # Creates tb1 as widget
+        self.tb_1.setStyleSheet("background-color: #323333")
         self.tb_1.layout = QVBoxLayout()  # Creates layout of tab1_1
         self.tb_1.layout.addWidget(self.textbox_1)  # adds textbox to tab1_1
         self.tb_1.setLayout(self.tb_1.layout)
         self.tabs1 = QTabWidget()  # creates tab widget
         self.tabs1.addTab(self.tb_1, 'Editor')  # adds tab1_1 to tab1 + description
+        self.tabs1.setStyleSheet("background-color: #323333; color: white;")
 
     def create_textbox_2(self):
         self.textbox_2 = QTextEdit(readOnly=True)
@@ -82,6 +82,7 @@ class TextEditor(QMainWindow):
         self.tb_2.setLayout(self.tb_2.layout)
         self.tabs2 = QTabWidget()
         self.tabs2.addTab(self.tb_2, 'Markdown Preview')
+        self.tabs2.setStyleSheet("background-color: #323333; color: white;")
 
     def create_menu(self):
         self.menubar = QMenuBar()  # adds Menubar
@@ -118,9 +119,10 @@ class TextEditor(QMainWindow):
         GUI_Functionalities.insertImage(self, self.textbox_1)
 
         self.back = QPushButton("Back", self)
+        self.back.setFixedSize(50,25)
         self.back.clicked.connect(self.go_to_menu)
         self.nameField = QLineEdit(self)
-        self.nameField.resize(self.width() * 0.25, self.height())
+        self.nameField.resize(200, self.height())
         try:
             self.nameField.setText(self.note.title)
         except AttributeError:
