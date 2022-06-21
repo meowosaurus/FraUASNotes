@@ -4,7 +4,6 @@ import de.frauas.server.DTOs.LoginDto;
 import de.frauas.server.DTOs.TokenDto;
 import de.frauas.server.Entities.Token;
 import de.frauas.server.Entities.Writer;
-import de.frauas.server.Repositories.NoteRepository;
 import de.frauas.server.Repositories.TokenRepository;
 import de.frauas.server.Repositories.WriterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,6 @@ import java.util.Optional;
 
 @RestController
 public class LoginController {
-
-    @Autowired
-    private NoteRepository noteRepository;
     @Autowired
     private WriterRepository writerRepository;
     @Autowired

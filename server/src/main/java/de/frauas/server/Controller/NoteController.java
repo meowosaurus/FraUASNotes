@@ -26,9 +26,9 @@ public class NoteController {
     private TokenRepository tokenRepository;
 
     @PostMapping("/addNote")
-    ResponseEntity<String> newNote(@RequestHeader String token, @RequestBody NoteDto noteDto)
+    String newNote(@RequestHeader String token, @RequestBody NoteDto noteDto)
             throws UserDoesNotExistException {
-        if(writerRepository.findById(noteDto.getWriterId()).isEmpty()){
+        if(writerRepository.findByWriterId(noteDto.getWriterId()).isEmpty()){
                 throw new UserDoesNotExistException(noteDto.getWriterId());}
         Optional<Token> tokenCheck = tokenRepository.findByToken(token);
         if(tokenCheck.isPresent() &&
@@ -39,17 +39,15 @@ public class NoteController {
                     noteDto.getWriterId());
             tokenCheck.get().updateLastUsed();
             tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
-            return ResponseEntity.ok().body("Note: " +
-                    noteRepository.save(note).getTitle() +
-                    " created successfully!");
+            return "Note: " + noteRepository.save(note).getTitle() + " created successfully!";
         }
-        return ResponseEntity.ok().body("Token is not correct!");
+        return "Token is not correct!";
     }
 
     @PostMapping("/updateNote")
-    ResponseEntity<String> updateNote(@RequestHeader String token, @RequestBody NoteDto noteDto)
+    String updateNote(@RequestHeader String token, @RequestBody NoteDto noteDto)
             throws UserDoesNotExistException {
-        if(writerRepository.findById(noteDto.getWriterId()).isEmpty()){
+        if(writerRepository.findByWriterId(noteDto.getWriterId()).isEmpty()){
             throw new UserDoesNotExistException(noteDto.getWriterId());}
         Optional<Token> tokenCheck = tokenRepository.findByToken(token);
         if(tokenCheck.isPresent() &&
@@ -57,9 +55,9 @@ public class NoteController {
             noteRepository.updateNote(noteDto.getTitle(), noteDto.getNote(), noteDto.getId());
             tokenCheck.get().updateLastUsed();
             tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
-            return ResponseEntity.ok().body("Note: updated successfully!");
+            return "Note: updated successfully!";
         }
-        return ResponseEntity.ok().body("Token is not correct!");
+        return "Token is not correct!";
     }
 
     @GetMapping("/getAllNotes")
