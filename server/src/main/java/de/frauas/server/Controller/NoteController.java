@@ -39,7 +39,7 @@ public class NoteController {
                     noteDto.getWriterId());
             tokenCheck.get().updateLastUsed();
             tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
-            return "Note: " + noteRepository.save(note).getTitle() + " created successfully!";
+            return noteRepository.save(note).toJson();
         }
         return "Token is not correct!";
     }
@@ -55,7 +55,7 @@ public class NoteController {
             noteRepository.updateNote(noteDto.getTitle(), noteDto.getNote(), noteDto.getId());
             tokenCheck.get().updateLastUsed();
             tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
-            return "Note: updated successfully!";
+            return noteRepository.getById(noteDto.getId()).toJson();
         }
         return "Token is not correct!";
     }
@@ -86,5 +86,19 @@ public class NoteController {
                     .body(s);
         }
         return ResponseEntity.badRequest().body("{\"reply\":\"Token is not correct!\"}");
+    }
+
+    @DeleteMapping("/deleteNote")
+    String deleteNote(@RequestHeader String token, @RequestBody NoteDto noteDto){
+        if(writerRepository.findByWriterId(noteDto.getWriterId()).isEmpty()){
+            throw new UserDoesNotExistException(noteDto.getWriterId());}
+        Optional<Token> tokenCheck = tokenRepository.findByToken(token);
+        if(tokenCheck.isPresent() &&
+                tokenCheck.get().getWriterId().equals(noteDto.getWriterId())) {
+            noteRepository.deleteById(noteDto.getId());
+            tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
+            return "Deleted!";
+        }
+        return "Token is not correct!";
     }
 }
