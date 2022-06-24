@@ -4,20 +4,20 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class NoteDto implements Serializable {
-    private final Long id;
+    private final Long noteId;
     private final String note;
     private final String title;
     private final Long writerId;
 
-    public NoteDto(Long id, String note, String title, Long writerId) {
-        this.id = id;
+    public NoteDto(Long noteId, String note, String title, Long writerId) {
+        this.noteId = noteId;
         this.note = note;
         this.title = title;
         this.writerId = writerId;
     }
 
-    public Long getId() {
-        return id;
+    public Long getNoteId() {
+        return noteId;
     }
 
     public String getNote() {
@@ -37,7 +37,7 @@ public class NoteDto implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NoteDto entity = (NoteDto) o;
-        return Objects.equals(this.id, entity.id) &&
+        return Objects.equals(this.noteId, entity.noteId) &&
                 Objects.equals(this.note, entity.note) &&
                 Objects.equals(this.title, entity.title) &&
                 Objects.equals(this.writerId, entity.writerId);
@@ -45,13 +45,13 @@ public class NoteDto implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, note, title, writerId);
+        return Objects.hash(noteId, note, title, writerId);
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
+                "noteId = " + noteId + ", " +
                 "note = " + note + ", " +
                 "title = " + title + ", " +
                 "writer = " + writerId + ")";

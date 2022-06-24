@@ -52,10 +52,10 @@ public class NoteController {
         Optional<Token> tokenCheck = tokenRepository.findByToken(token);
         if(tokenCheck.isPresent() &&
                 tokenCheck.get().getWriterId().equals(noteDto.getWriterId())) {
-            noteRepository.updateNote(noteDto.getTitle(), noteDto.getNote(), noteDto.getId());
+            noteRepository.updateNote(noteDto.getTitle(), noteDto.getNote(), noteDto.getNoteId());
             tokenCheck.get().updateLastUsed();
             tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
-            return noteRepository.getById(noteDto.getId()).toJson();
+            return noteRepository.getById(noteDto.getNoteId()).toJson();
         }
         return "Token is not correct!";
     }
@@ -95,7 +95,7 @@ public class NoteController {
         Optional<Token> tokenCheck = tokenRepository.findByToken(token);
         if(tokenCheck.isPresent() &&
                 tokenCheck.get().getWriterId().equals(noteDto.getWriterId())) {
-            noteRepository.deleteById(noteDto.getId());
+            noteRepository.deleteById(noteDto.getNoteId());
             tokenRepository.updateToken(tokenCheck.get().getLastUsed(), tokenCheck.get().getWriterId());
             return "Deleted!";
         }
