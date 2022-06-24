@@ -18,6 +18,7 @@ public class Note {
     )
     private Long noteId;
     private String title;
+    @Column(columnDefinition = "longtext")
     private String note;
     private Long writerId;
 
