@@ -9,7 +9,7 @@ import java.util.UUID;
 @Entity
 public class Token {
     @Id
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 40)
     private String token;
     @Column(unique = true, nullable = false)
     private Long writerId;
