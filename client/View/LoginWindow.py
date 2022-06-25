@@ -1,4 +1,8 @@
+import atexit
+from distutils.log import Log
 import sys
+from tkinter import W
+from tkinter.messagebox import NO
 
 from PySide6.QtWidgets import QDialog, QLineEdit, QPushButton, QLabel
 
@@ -6,6 +10,7 @@ sys.path.append('../')
 from APIHelper import LoginHelper
 from APIHelper import WriterHelper
 from Model.Writer import Writer
+from Helpers import PasswordHelper
 
 
 class LoginWindow(QDialog):
@@ -14,7 +19,7 @@ class LoginWindow(QDialog):
         self.parent = parent
         self.setWindowTitle("User Login")
 
-        self.QLabel = QLabel("Welcom to FRA-UAS-Notes!\nPlease enter your credentials.", self)
+        self.QLabel = QLabel("Welcome to FRA-UAS-Notes!\nPlease enter your credentials.", self)
         self.QLabel.move(123, 35)
 
         self.resize(400, 300)
@@ -41,17 +46,21 @@ class LoginWindow(QDialog):
 
     def login(self):
 
-        reply = LoginHelper.login(Writer(self.UName.text(), self.UPass.text(), None, None, None))
+        reply = LoginHelper.login(Writer(self.UName.text(), PasswordHelper.encode(self.UPass.text()), None, None, None))
+
         if hasattr(reply, "token"):
             print("Successfully logged in")
             self.hide()
             self.parent.token = reply
             self.parent.writer = WriterHelper.getWriter(reply)
+            atexit.register(LoginHelper.logout, self.parent.token)
             self.parent.initMenu()
         else:
+            print(type(reply))
             self.QLabelMessage.resize(300,30)
-            self.QLabelMessage.setText(reply.Reply)
+            self.QLabelMessage.setText("Error at server connection.")
 
     def register(self):
         self.parent.UserRegisers()
         self.close()
+

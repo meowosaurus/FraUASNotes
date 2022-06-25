@@ -6,7 +6,7 @@ import GUI
 
 sys.path.append('../')
 from Model.Note import Note
-from APIHelper import NoteHelper
+from APIHelper import NoteHelper, LoginHelper
 
 
 class Menu(QWidget):
@@ -25,6 +25,8 @@ class Menu(QWidget):
         self.newNoteButton.clicked.connect(self._clickNewNote)
         self.logoutButton = QPushButton("Log out", self)
         self.logoutButton.clicked.connect(self._clickLogout)
+        self.deleteButton = QPushButton("Delete Notes", self)
+        self.deleteButton.clicked.connect(self._clickDelete)
         self.HBox1 = QHBoxLayout(self)
         self.layout = self.HBox1
 
@@ -48,6 +50,7 @@ class Menu(QWidget):
         self.HBox1.addLayout(self.VBox1)
         self.VBox1.addWidget(self.newNoteButton)
         self.VBox1.addWidget(self.logoutButton)
+        self.VBox1.addWidget(self.deleteButton)
         self.VBox1.addStretch(1)
 
     def _clickNote(self):
@@ -56,36 +59,43 @@ class Menu(QWidget):
                 self.parent.OpenTextEditor(note)
                 self.close()
 
-    '''
-        This function returns one Button that opens a given Note in TextEditor
-    '''
-
-    def _addNoteButton(self, note: Note) -> QPushButton:
-        def clickButton():
-            self.parent.OpenTextEditor(note)
-            self.close()
-
-        button = QPushButton(note.title, self)
-        button.clicked.connect(clickButton)
-        return button
-
-    def _buildTable(self, notes: list):
-        self.layout = QVBoxLayout(self)
-        try:
-            for note in notes:
-                self.layout.addWidget(self._addNoteButton(note))
-        except TypeError:
-            pass
-        self.layout.addStretch(1)
-        self.setLayout(self.layout)
-
     def _clickLogout(self):
-        # LoginHelper.logout(token)
+        LoginHelper.logout(self.parent.token)
         self.parent.UserLogin()
         self.close()
 
     def _clickNewNote(self):
-        # TODO: hier muss addNote ID etc zurückgeben
         note = Note(None, "New Note", None, None)
         self.parent.OpenTextEditor(note, True)
         self.close()
+
+    def _clickDelete(self):
+        deleteDialog = QDialog()
+        deleteDialog.setWindowTitle("Delete Note")
+        deleteDialog.resize(400, 300)
+        notesList = self.getNotesList(deleteDialog)
+
+        deleteButton = QPushButton("Delete", deleteDialog)
+        deleteButton.move(160, 260)
+
+        def clicked():
+            for note in self.parent.allNotes:
+                if notesList.currentItem().text() == note.title:
+                    NoteHelper.deleteNote(self.parent.token, note)
+                    self.parent.allNotes = NoteHelper.getAllNotes(self.parent.token)
+                    notesList.removeItemWidget(notesList.currentItem())
+
+        deleteButton.clicked.connect(clicked)
+
+        deleteDialog.exec_()
+
+    def getNotesList(self, window) -> QListWidget:
+        notesList = QListWidget(window)
+        notesList.resize(400, 250)
+        try:
+            for note in self.parent.allNotes:
+                tempItem = QListWidgetItem(note.title)
+                notesList.addItem(tempItem)
+        except:
+            pass
+        return  notesList

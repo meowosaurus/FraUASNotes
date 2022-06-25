@@ -1,12 +1,13 @@
-import dataclasses
+from dataclasses import dataclass
 import json
 
+
+@dataclass
 class Note(object):
-    def __init__(self, noteId, title: str, note, writerId):
-        self.noteId = noteId
-        self.title = title
-        self.note = note
-        self.writerId = writerId
+    noteId: str
+    title: str
+    note: str
+    writerId: str
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,

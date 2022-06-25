@@ -10,7 +10,7 @@ sys.path.append('../')
 from Model.Note import Note
 from Model.Token import Token
 from Model.Writer import Writer
-
+from Helpers.PasswordHelper import encode
 
 
 def addNote(token: Token, note: Note):
@@ -24,12 +24,18 @@ def addNote(token: Token, note: Note):
         r = requests.post("http://localhost:8090/addNote",
                           data=note.toJSON(),
                           headers=headers)
+        print(f"added {r.content}")
         return r.content
     except requests.exceptions.RequestException as e:
         return e
 
 
-def updateNote(token, note):
+def updateNote(token: Token, note: Note):
+    print()
+    print("--- updating ---")
+    print(f"note{note}")
+    print()
+
     headers = {
         'Accept': 'application/json',  # Accepting json strings from server
         'Content-Type': 'application/json',  # Sending json strings to server
@@ -40,15 +46,26 @@ def updateNote(token, note):
         r = requests.post("http://localhost:8090/updateNote",
                           data=note.toJSON(),
                           headers=headers)
+        print(f"updated note{note.title}")
         return r.content
     except requests.exceptions.RequestException as e:
         return e
 
 
-'''
-Returns a list of all notes a Writer has 
-'''
-
+def deleteNote(token: Token, note: Note):
+    headers = {
+        'Accept': 'application/json',  # Accepting json strings from server
+        'Content-Type': 'application/json',  # Sending json strings to server
+        'Content-Encoding': 'gzip',  # Compressing all data send by the client to save bandwidth
+        'token':  token.token
+    }
+    try:
+        r = requests.delete("http://localhost:8090/deleteNote",
+                            data=note.toJSON(),
+                            headers=headers)
+        print(f"Deleted Note {note.title}")
+    except requests.exceptions.RequestException as e:
+        return e
 
 def getAllNotes(token: Token) -> list:
     headers = {
@@ -66,26 +83,7 @@ def getAllNotes(token: Token) -> list:
         if hasattr(l, "notes"):
             return list(map(lambda x: Note(x.noteId, x.title, x.note, x.writerId), l.notes))
         else:
+            print("return empty list")
             return []
     except requests.exceptions.RequestException as e:
         return e
-
-'''
-import LoginHelper
-
-writer = Writer("p", "p", None, None, None)
-token = LoginHelper.login(writer)
-print(token.token)
-notes = getAllNotes(token)
-print(notes)
-
-newnote = Note(notes[0].noteId, notes[0].title, "was geht ab", notes[0].writerId)
-
-print("----- upating note 1")
-print(updateNote(token, newnote))
-
-notes2 = getAllNotes(token)
-for n in notes2:
-    print(n.title)
-    print(n.note)
-'''

@@ -39,7 +39,6 @@ class GUI(QMainWindow):
         self.TextEditor.show()
         self.close()
 
-
 if __name__ == '__main__':  # Main for testing purposes
     app = QApplication(sys.argv)
     # Open the sqq styles file and read in the css-alike styling code

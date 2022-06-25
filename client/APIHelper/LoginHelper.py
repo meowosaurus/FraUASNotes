@@ -5,6 +5,7 @@ from tkinter.messagebox import NO
 import requests
 from types import SimpleNamespace
 
+
 import sys
 
 sys.path.append('../')
@@ -13,7 +14,7 @@ from Model.Token import Token
 from Model.Writer import Writer
 
 
-def login(writer: Writer) -> Token:
+def login(writer: Writer):
     '''
     Logs in writer using the password and name. 
     Returns None, if login failed and token, if login succeeded 
@@ -31,10 +32,9 @@ def login(writer: Writer) -> Token:
         if hasattr(reply, "token") & hasattr(reply, "writerId"):
             return __toToken(reply)
         else:
-            print(reply)
             return reply
     except requests.exceptions.RequestException as e:
-        return e
+        return "Connection to Server Failed"
 
 
 def __toToken(SN: SimpleNamespace) -> Token:
@@ -51,9 +51,20 @@ def logout(token: Token):
         r = requests.post("http://localhost:8090/login",
                           data=token.toJSON(),
                           headers=headers)
+        print(f"logging out writer {token.writerId}")
         return json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
     except requests.exceptions.RequestException as e:
         return e
 
 # print(login(Writer("H", "h", None, None, None)).token)
 # print(login(Writer("H", "h", None, None, None)).writerId)
+
+'''
+import LoginHelper
+import Helpers.PasswordHelper
+
+w = Writer("o", Helpers.PasswordHelper.encode("o"), None,None, None)
+
+print(LoginHelper.login(w))
+
+'''

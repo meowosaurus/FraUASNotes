@@ -1,3 +1,4 @@
+import requests.exceptions
 from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QDialog, QLineEdit, QPushButton, QLabel
 
@@ -6,6 +7,7 @@ sys.path.append('../')
 from APIHelper import WriterHelper
 from Model.Writer import Writer
 from View.GUI import GUI
+from Helpers import PasswordHelper
 
 class RegisterWindow(QDialog):
     def __init__(self, parent) -> None:
@@ -74,13 +76,15 @@ class RegisterWindow(QDialog):
             self.QLabelMessage.setText("Passwords are unequal!")
             self.QLabelMessage.resize(280,20)
             return
-        reply = WriterHelper.addWriter(Writer(self.userName.text(), self.password.text(), None, self.firstName.text(), self.email.text()))
-        print(reply)
+        reply = WriterHelper.addWriter(Writer(self.userName.text(), PasswordHelper.encode(self.password.text()), None, self.firstName.text(), self.email.text()))
         if hasattr(reply, "writerId"):
             print(f"User {reply.userName} registered.")
-            # TODO directly log in
             self.parent.UserLogin()
             self.close()
+        elif isinstance(reply, requests.exceptions.ConnectionError):
+            self.QLabelMessage.setText("Connection to server failed")
+            self.QLabelMessage.resize(200, 20)
+            self.QLabelMessage.move(95, 270)
         else:
             self.QLabelMessage.setText("Credentials not free... try again!")
             self.QLabelMessage.move(80, 270)

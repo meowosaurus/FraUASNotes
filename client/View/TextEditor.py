@@ -23,7 +23,9 @@ class TextEditor(QMainWindow):
         self.note = note
         self.newNote = newNote
         self.parent = parent
-
+        # relaod all the notes
+        self.parent.allNotes = NoteHelper.getAllNotes(self.parent.token)
+        
         # Initialize buttons for later use
         self.underline_button = None
         self.italic_button = None
@@ -146,16 +148,16 @@ class TextEditor(QMainWindow):
             return
         for note in self.parent.allNotes:
             self.list.addItem(note.title)
-
-
         self.list.itemClicked.connect(self.clicked)
 
     def clicked(self, title):
         for note in self.parent.allNotes:
             if title.text() == note.title:
+                print("other note")
                 self.save_file()
                 self.parent.OpenTextEditor(note)
                 self.close()
+                return 
 
     def file_open_disk(self):
         self.filename = QFileDialog.getOpenFileName()
@@ -168,27 +170,20 @@ class TextEditor(QMainWindow):
     def save_file(self) -> bool:
         if self.newNote:
             if self.nameField.text().rstrip(" ") in list(map(lambda x: str(x.title), self.parent.allNotes)):
-                print("name schon besetzt!!!")
-                self.nameField.setStyleSheet("background:#fff;")
+                print("name schon besetzt!")
                 return False
             NoteHelper.addNote(self.parent.token, Note(None, self.nameField.text().rstrip(), self.textbox_1.toPlainText(),
                                                        self.parent.writer.writerId))
             return True
         else:
+            print()
+            print(f"saving note {self.nameField.text().rstrip()}")
+            print(f"with content: {self.textbox_1.toPlainText()}")
+            print(f"with content: {self.textbox_1}")
+            print()
             NoteHelper.updateNote(self.parent.token, Note(self.note.noteId, self.note.title, self.textbox_1.toPlainText(), self.note.writerId))
             return True
-        '''
 
-        ### deprecated
-
-        data = ET.Element('root')
-        element1 = ET.SubElement(data, 'Content')
-        element1.text = self.textbox_1.toPlainText()
-        b_xml = ET.tostring(element1, encoding='utf-8')
-        with open("XML_Files/current_file.xml", "wb") as f:
-            f.write(b_xml)
-        '''
-    # I think this is not needed, mfG Hendrik
     def new_file(self):
         pass
 

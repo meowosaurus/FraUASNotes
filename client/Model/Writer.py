@@ -1,13 +1,14 @@
+from dataclasses import dataclass
 import json
 
 
+@dataclass
 class Writer(object):
-    def __init__(self, userName, password, writerId, firstName, email):
-        self.userName = userName
-        self.password = password
-        self.writerId = writerId
-        self.firstName = firstName
-        self.email = email
+    userName: str
+    password: str
+    writerId: str
+    firstName: str
+    email: str
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,
