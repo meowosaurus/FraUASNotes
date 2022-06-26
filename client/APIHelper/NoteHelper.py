@@ -9,8 +9,6 @@ sys.path.append('../')
 
 from Model.Note import Note
 from Model.Token import Token
-from Model.Writer import Writer
-from Helpers.PasswordHelper import encode
 
 
 def addNote(token: Token, note: Note):
@@ -43,7 +41,7 @@ def updateNote(token: Token, note: Note):
         'token': token.token
     }
     try:
-        r = requests.post("http://localhost:8090/updateNote",
+        r = requests.put("http://localhost:8090/updateNote",
                           data=note.toJSON(),
                           headers=headers)
         print(f"updated note{note.title}")

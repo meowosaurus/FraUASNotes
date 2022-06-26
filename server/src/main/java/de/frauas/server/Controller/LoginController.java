@@ -37,7 +37,7 @@ public class LoginController {
         return "{\"Reply\":\"Password is wrong!\"}";
     }
 
-    @PostMapping("/logout")
+    @DeleteMapping("/logout")
     String logout(@RequestBody TokenDto tokenDto){
         tokenRepository.deleteTokenByWriterId(tokenDto.getWriterId());
         return "Logout completed!";

@@ -44,7 +44,7 @@ public class NoteController {
         return "Token is not correct!";
     }
 
-    @PostMapping("/updateNote")
+    @PutMapping("/updateNote")
     String updateNote(@RequestHeader String token, @RequestBody NoteDto noteDto)
             throws UserDoesNotExistException {
         if(writerRepository.findByWriterId(noteDto.getWriterId()).isEmpty()){

@@ -5,7 +5,6 @@ from tkinter.messagebox import NO
 import requests
 from types import SimpleNamespace
 
-
 import sys
 
 sys.path.append('../')
@@ -48,13 +47,14 @@ def logout(token: Token):
         'Content-Encoding': 'gzip'  # Compressing all data send by the client to save bandwidth
     }
     try:
-        r = requests.post("http://localhost:8090/login",
-                          data=token.toJSON(),
-                          headers=headers)
+        r = requests.delete("http://localhost:8090/logout",
+                            data=token.toJSON(),
+                            headers=headers)
         print(f"logging out writer {token.writerId}")
         return json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
     except requests.exceptions.RequestException as e:
         return e
+
 
 # print(login(Writer("H", "h", None, None, None)).token)
 # print(login(Writer("H", "h", None, None, None)).writerId)
