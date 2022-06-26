@@ -36,6 +36,7 @@ class GUI(QMainWindow):
 
     def OpenTextEditor(self, note: Note, newNote=False):
         self.TextEditor = TextEditor(self, note, newNote)
+        self.TextEditor.textbox_2.setMarkdown(self.TextEditor.textbox_1.toPlainText())
         self.TextEditor.show()
         self.close()
 

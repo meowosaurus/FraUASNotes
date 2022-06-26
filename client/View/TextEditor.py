@@ -1,6 +1,5 @@
 import sys
 import types
-import xml.etree.ElementTree as ET
 
 from PySide6 import QtCore
 from PySide6.QtGui import QFont, QAction
@@ -12,7 +11,9 @@ sys.path.append("../")
 from APIHelper import NoteHelper
 from Model.Note import Note
 
+
 class TextEditor(QMainWindow):
+    textbox_2 = None
     textbox_1 = None
     filename = None
     path = None
@@ -23,11 +24,14 @@ class TextEditor(QMainWindow):
         self.note = note
         self.newNote = newNote
         self.parent = parent
+        self.title = note.title
         # relaod all the notes
         self.parent.allNotes = NoteHelper.getAllNotes(self.parent.token)
-        
+
         # Initialize buttons for later use
         self.underline_button = None
+        self.saveFile = None
+        self.openFileFromDisk = None
         self.italic_button = None
         self.bold_button = None
         self.heading_button = None
@@ -42,13 +46,13 @@ class TextEditor(QMainWindow):
         self.create_textbox_1()
         self.create_textbox_2()
         self.create_toolbar()
-        #self.create_menu()
+        # self.create_menu()
         self.createList()
-        #self.setMenuBar(self.menubar)
+        # self.setMenuBar(self.menubar)
 
         # Add tabs to main layout
         main_layout = QGridLayout()  # Main Layout
-        main_layout.addWidget(self.toolbar_hori,0, 0, 1, 8)
+        main_layout.addWidget(self.toolbar_hori, 0, 0, 1, 8)
         main_layout.addWidget(self.tabs1, 1, 4, 2, 1)
         main_layout.addWidget(self.tabs2, 1, 6, 2, 1)
         main_layout.addWidget(self.list, 1, 0, 1, 3)
@@ -98,16 +102,6 @@ class TextEditor(QMainWindow):
         newFile.triggered.connect(self.new_file)
         file_menu.addAction(newFile)
 
-        openFileFromDisk = QAction("&Open File from Disk", self)
-        openFileFromDisk.setShortcut("Ctrl+O")
-        openFileFromDisk.triggered.connect(self.file_open_disk)
-        file_menu.addAction(openFileFromDisk)
-
-        saveFile = QAction("&Save File", self)
-        saveFile.setShortcut("Ctrl+S")
-        saveFile.triggered.connect(self.save_file)
-        file_menu.addAction(saveFile)
-
     def create_toolbar(self):
         # Creates toolbar horizontal
         self.toolbar_hori = QToolBar()
@@ -119,12 +113,15 @@ class TextEditor(QMainWindow):
         GUI_Functionalities.heading_text(self, self.textbox_1)
         GUI_Functionalities.insertTable(self, self.textbox_1)
         GUI_Functionalities.insertImage(self, self.textbox_1)
-
+        GUI_Functionalities.safe_button(self)
+        GUI_Functionalities.open_button(self, self.textbox_1, self.textbox_2)
+        #GUI_Functionalities.export(self, self.textbox_1.toPlainText(), self.nameField)
+    
         self.back = QPushButton("Back", self)
-        self.back.setFixedSize(50,25)
+        self.back.setFixedSize(50, 25)
         self.back.clicked.connect(self.go_to_menu)
         self.nameField = QLineEdit(self)
-        self.nameField.resize(200, self.height())
+        self.nameField.resize(100, self.height())
         try:
             self.nameField.setText(self.note.title)
         except AttributeError:
@@ -132,6 +129,8 @@ class TextEditor(QMainWindow):
             pass
 
         # Adds buttons to toolbar
+        self.toolbar_hori.addAction(self.openFileFromDisk)
+        self.toolbar_hori.addAction(self.saveFile)
         self.toolbar_hori.addAction(self.bold_button)
         self.toolbar_hori.addAction(self.italic_button)
         self.toolbar_hori.addAction(self.underline_button)
@@ -140,6 +139,7 @@ class TextEditor(QMainWindow):
         self.toolbar_hori.addAction(self.image_button)
         self.toolbar_hori.addWidget(self.nameField)
         self.toolbar_hori.addWidget(self.back)
+        #self.toolbar_hori.addAction(self.exportButton)
         # Creates vertical toolbar
 
     def createList(self):
@@ -157,23 +157,18 @@ class TextEditor(QMainWindow):
                 self.save_file()
                 self.parent.OpenTextEditor(note)
                 self.close()
-                return 
+                return
 
-    def file_open_disk(self):
-        self.filename = QFileDialog.getOpenFileName()
-        self.path = self.filename[0]
-        with open(self.path, 'r') as f:
-            content = f.read()
-            self.textbox_1.setText(content)
-            self.textbox_2.setMarkdown(content)
 
     def save_file(self) -> bool:
+        print("Wird ausgeführt")
         if self.newNote:
             if self.nameField.text().rstrip(" ") in list(map(lambda x: str(x.title), self.parent.allNotes)):
                 print("name schon besetzt!")
                 return False
-            NoteHelper.addNote(self.parent.token, Note(None, self.nameField.text().rstrip(), self.textbox_1.toPlainText(),
-                                                       self.parent.writer.writerId))
+            NoteHelper.addNote(self.parent.token,
+                               Note(None, self.nameField.text().rstrip(), self.textbox_1.toPlainText(),
+                                    self.parent.writer.writerId))
             return True
         else:
             print()
@@ -181,11 +176,10 @@ class TextEditor(QMainWindow):
             print(f"with content: {self.textbox_1.toPlainText()}")
             print(f"with content: {self.textbox_1}")
             print()
-            NoteHelper.updateNote(self.parent.token, Note(self.note.noteId, self.note.title, self.textbox_1.toPlainText(), self.note.writerId))
+            NoteHelper.updateNote(self.parent.token,
+                                  Note(self.note.noteId, self.nameField.text(), self.textbox_1.toPlainText(),
+                                       self.note.writerId))
             return True
-
-    def new_file(self):
-        pass
 
     def go_to_menu(self):
         saved = self.save_file()
@@ -200,6 +194,14 @@ class TextEditor(QMainWindow):
                 self.textbox_1.insertPlainText(" ")
                 self.textbox_2.setMarkdown(self.textbox_1.toPlainText())
                 return True
+            elif event.key() == QtCore.Qt.Key_Return:
+                self.textbox_1.insertPlainText("  ")
+                self.textbox_2.setMarkdown(self.textbox_1.toPlainText())
+            elif event.key() == QtCore.Qt.Key_Backspace:
+                self.textbox_2.setMarkdown(self.textbox_1.toPlainText())
+            elif event.key() == QtCore.Qt.Key_Tab:
+                self.textbox_2.setMarkdown(self.textbox_1.toPlainText())
+
         return super(TextEditor, self).eventFilter(obj, event)
 
 

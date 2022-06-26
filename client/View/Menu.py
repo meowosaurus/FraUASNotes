@@ -3,6 +3,7 @@ import sys
 from PySide6.QtWidgets import *
 
 import GUI
+from View.TextEditor import TextEditor
 
 sys.path.append('../')
 from Model.Note import Note
@@ -86,6 +87,7 @@ class Menu(QWidget):
                     notesList.removeItemWidget(notesList.currentItem())
 
         deleteButton.clicked.connect(clicked)
+
 
         deleteDialog.exec_()
 
