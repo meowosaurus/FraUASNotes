@@ -34,7 +34,41 @@ class Menu(QWidget):
         self.VBox2 = QVBoxLayout()
         self.HBox1.addLayout(self.VBox2)
 
-        # Load notes
+        # create notes list
+        self.QnoteList = QListWidget()
+        self.QnoteList.setStyleSheet(
+            "QListWidget{width: 70%; height: 100%; border-width: 30px; font-size: large;} QListWidget::Item::{background-color: black ;}")
+        self.VBox2.addWidget(self.QnoteList)
+        self.QnoteList.itemClicked.connect(self._clickNote)
+
+        # fill notes list
+        self.filNotesList(self.QnoteList)
+
+
+
+
+        self.VBox1 = QVBoxLayout()
+        self.HBox1.addLayout(self.VBox1)
+        self.VBox1.addWidget(self.newNoteButton)
+        self.VBox1.addWidget(self.logoutButton)
+        self.VBox1.addWidget(self.deleteButton)
+        self.VBox1.addStretch(1)
+
+    def filNotesList(self, list: QListWidget):
+        self.parent.allNotes = NoteHelper.getAllNotes(self.parent.token)
+        print(f"filling noteslist {list} with notes: {self.parent.allNotes}")
+        list.clear()
+        try:
+            for note in self.parent.allNotes:
+                tempItem = QListWidgetItem(note.title)
+                self.QnoteList.addItem(tempItem)
+        except:
+            pass
+        # deprecated
+    def loadNotesList(self):
+        print("HI")
+        self.parent.allNotes = NoteHelper.getAllNotes(self.parent.token)
+        print(f"load noteslist with notes: {self.parent.allNotes}")
         self.QnoteList = QListWidget()
         self.QnoteList.setStyleSheet(
             "QListWidget{width: 70%; height: 100%; border-width: 30px; font-size: large;} QListWidget::Item::{background-color: black ;}")
@@ -46,13 +80,6 @@ class Menu(QWidget):
         except:
             pass
         self.QnoteList.itemClicked.connect(self._clickNote)
-
-        self.VBox1 = QVBoxLayout()
-        self.HBox1.addLayout(self.VBox1)
-        self.VBox1.addWidget(self.newNoteButton)
-        self.VBox1.addWidget(self.logoutButton)
-        self.VBox1.addWidget(self.deleteButton)
-        self.VBox1.addStretch(1)
 
     def _clickNote(self):
         for note in self.parent.allNotes:
@@ -71,6 +98,75 @@ class Menu(QWidget):
         self.close()
 
     def _clickDelete(self):
+        self.deleteDialog = DeleteDialog(self)
+
+
+
+class DeleteDialog(QDialog):
+    def __init__(self, parent):
+        super().__init__()
+        self.parent: Menu = parent
+        self._initMe()
+        self.show()
+
+    def _initMe(self):
+        self.resize(300, 300)
+
+        listWidget = QListWidget()
+        self.setWindowTitle("Delete Notes")
+
+        for note in self.parent.parent.allNotes:
+            QListWidgetItem(note.title, listWidget)
+
+        window_layout = QVBoxLayout(self)
+        window_layout.addWidget(listWidget)
+
+        button = QPushButton("Delete")
+
+        def click():
+            delNote: Note = None
+            for note in self.parent.parent.allNotes:
+                if listWidget.currentItem().text() == note.title:
+                    delNote = note
+            try:
+                print(listWidget.currentItem().text())
+                listWidget.takeItem(listWidget.currentIndex().row())
+                NoteHelper.deleteNote(self.parent.parent.token, delNote)
+                #self.parent.parent.allNotes = NoteHelper.getAllNotes(self.parent.token)
+                self.parent.filNotesList(self.parent.QnoteList)
+            except AttributeError:
+                pass
+
+        button.clicked.connect(click)
+        window_layout.addWidget(button)
+
+        self.setLayout(window_layout)
+
+
+
+        '''
+        
+        self.list = QListWidget()
+
+        for note in self.allNotes:
+            QListWidgetItem(note.title, self.list)
+
+        self.button = QPushButton("Delete")
+        def _click():
+            #self.list.takeItem(self.list.currentIndex().row())
+            #print(f"QDialog is trying to delete {self.list.currentItem()}")
+            print("Hi")
+
+        self.button.clicked.connect(_click())
+
+        self.window_layout = QVBoxLayout(self)
+        self.window_layout.addWidget(self.list)
+        self.window_layout.addWidget(self.button)
+        self.setLayout(self.window_layout)
+
+        
+        
+        ######
         deleteDialog = QDialog()
         deleteDialog.setWindowTitle("Delete Note")
         deleteDialog.resize(400, 300)
@@ -101,3 +197,4 @@ class Menu(QWidget):
         except:
             pass
         return  notesList
+        '''

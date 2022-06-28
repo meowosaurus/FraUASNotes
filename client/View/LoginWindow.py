@@ -56,9 +56,8 @@ class LoginWindow(QDialog):
             atexit.register(LoginHelper.logout, self.parent.token)
             self.parent.initMenu()
         else:
-            print(type(reply))
             self.QLabelMessage.resize(300,30)
-            self.QLabelMessage.setText("Error at server connection.")
+            self.QLabelMessage.setText(reply)
 
     def register(self):
         self.parent.UserRegisers()

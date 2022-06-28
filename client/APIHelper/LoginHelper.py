@@ -31,9 +31,9 @@ def login(writer: Writer):
         if hasattr(reply, "token") & hasattr(reply, "writerId"):
             return __toToken(reply)
         else:
-            return reply
+            return "      " + reply.Reply
     except requests.exceptions.RequestException as e:
-        return "Connection to Server Failed"
+        return "Connection to server failed!"
 
 
 def __toToken(SN: SimpleNamespace) -> Token:
@@ -51,7 +51,7 @@ def logout(token: Token):
                             data=token.toJSON(),
                             headers=headers)
         print(f"logging out writer {token.writerId}")
-        return json.loads(r.content, object_hook=lambda d: SimpleNamespace(**d))
+        return r.content
     except requests.exceptions.RequestException as e:
         return e
 
