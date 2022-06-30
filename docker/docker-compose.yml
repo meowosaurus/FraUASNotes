@@ -19,6 +19,8 @@ services:
     container_name: "notes_server"
     image: openjdk:17
     restart: unless_stopped
+    ports:
+      - 8090
     depends_on:
       - db
     volumes: "./server/src:/usr/src/frauasnotes/server"
