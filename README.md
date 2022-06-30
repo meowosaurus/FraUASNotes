@@ -15,7 +15,7 @@ A python based qt application to write and sync notes to a java server via Rest 
 
 You should have the following things installed:
 - Python 3.8
-- Java JDK 1.7
+- Java JDK 17
 - git
 
 You also need the following IDEs:
