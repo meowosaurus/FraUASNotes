@@ -17,7 +17,7 @@ services:
 
   notes_server:
     container_name: "notes_server"
-    image: openjdk:18
+    image: openjdk:17
     restart: unless_stopped
     depends_on:
       - db
