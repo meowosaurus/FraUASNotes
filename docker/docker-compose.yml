@@ -1,0 +1,28 @@
+version: 3.3
+
+services:
+  db:
+    container_name: "db"
+    image: mysql:5.7
+    restart: unless_stopped
+    ports:
+      - 9906:3306
+    volumes:
+      - "./mysql:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=SUPER_SECRET_PASSWORD
+      - MYSQL_USER=NOTES_SQL_USER
+      - MYSQL_PASSWORD=ANOTHER_SUPER_SECRET_PASSWORD
+      - MYSQL_DATABASE=NOTES_SQL_DATABASE
+
+  notes_server:
+    container_name: "notes_server"
+    image: openjdk:7
+    restart: unless_stopped
+    depends_on:
+      - db
+    volumes: "./server/src:/usr/src/frauasnotes/server"
+    build:
+      context: ./build_server/
+      dockerfile: Dockerfile
+    
