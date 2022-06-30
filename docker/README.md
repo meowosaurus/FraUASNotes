@@ -11,7 +11,7 @@
 1. Change the mysql root password, mysql username, mysql user password and mysql user database
 1. When using nano, exit with control + X and save the file
 1. Create import folders with `mkdir -p server/src mysql`
-1. Copy all server files `cp -R ../server/src/ ./server/src/`
+1. Copy all server files `cp -R ../server/src/main/ ./server/src/`
 1. Navigate to `./server/src/main/resources/`
 1. Edit file `application.properties`
 1. Change the mysql server address, user password and user database. If you like you could also use the mysql root password
