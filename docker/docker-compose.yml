@@ -17,14 +17,14 @@ services:
 
   notes_server:
     container_name: "notes_server"
-    image: openjdk:17
+    image: ubuntu:22.04
     restart: unless_stopped
     ports:
       - 8090
     depends_on:
       - db
     volumes: 
-      - "./server/src:/usr/src/frauasnotes/server"
+      - "./server/src:/server"
     build:
       context: ./build_server/
       dockerfile: Dockerfile
