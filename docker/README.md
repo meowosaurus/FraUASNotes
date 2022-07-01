@@ -1,7 +1,13 @@
 # FraUASNotes - Docker
 
+## Requirements
+* 100MB of RAM
+* 2 GB of space
+
 ## Prerequesites
-* Docker -> https://docs.docker.com/get-docker/
+* Docker -> https://docs.docker.com/get-docker/ 
+* docker-compose
+* IntelliJ (Community or Professional)
 * git
 
 ## Setup Guide
@@ -15,8 +21,17 @@
 1. Navigate to `cd server/src/main/resources/`
 1. Edit file `application.properties`
 1. Change the mysql server address, user password and user database. If you like you could also use the mysql root password
+
+## Building the .jar
+There is a great tutorial on how to create a .jar file from an IntelliJ project: 
+- https://www.jetbrains.com/help/idea/compiling-applications.html#package_into_jar
+
+1. Once you completed the linked tutorial move the file to the build folder with `mv ../server/out/artifacts/server_jar/server.jar ./build/`
+
+## Starting docker
+
 1. Navigate back to `FraUASNotes/docker` with `cd ../../../..`
-1. Run `docker-compose up -d` and wait 10 seconds
+1. Run `docker-compose up -d` and wait a few minutes
 
 Congratulations, you server is now up and running
 
