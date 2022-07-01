@@ -6,6 +6,7 @@ import LoginWindow
 import Menu
 import RegisterWindow
 from TextEditor import TextEditor
+from View.RegisterWindow import RegisterWindow
 
 sys.path.append('../')
 from Model import Note, Token, Writer
@@ -30,7 +31,7 @@ class GUI(QMainWindow):
         self.close()
 
     def UserRegisers(self):
-        self.RegisterWindow = RegisterWindow.RegisterWindow(self)
+        self.RegisterWindow = RegisterWindow(self)
         self.RegisterWindow.show()
         self.close()
 

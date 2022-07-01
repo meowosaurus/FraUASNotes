@@ -1,12 +1,12 @@
 import requests.exceptions
 from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QDialog, QLineEdit, QPushButton, QLabel
+import re
 
 import sys
 sys.path.append('../')
 from APIHelper import WriterHelper
 from Model.Writer import Writer
-from View.GUI import GUI
 from Helpers import PasswordHelper
 
 class RegisterWindow(QDialog):
@@ -35,6 +35,7 @@ class RegisterWindow(QDialog):
         self.QLabelpassword.setText("Password")
         self.QLabelpassword.move(60, 110)
         self.password = QLineEdit(self)
+        self.password.setEchoMode(QLineEdit.Password)
         self.password.resize(130, 20)
         self.password.move(135, 110)
 
@@ -42,6 +43,7 @@ class RegisterWindow(QDialog):
         self.QLabelpassword2.setText("Password")
         self.QLabelpassword2.move(60, 140)
         self.password2 = QLineEdit(self)
+        self.password2.setEchoMode(QLineEdit.Password)
         self.password2.resize(130, 20)
         self.password2.move(135, 140)
 
@@ -68,14 +70,22 @@ class RegisterWindow(QDialog):
 
     def register(self):
         print("Tries to register.")
-        if not self.firstName.text() or not self.userName.text() or not self.password.text() or not self.email.text():
-            self.QLabelMessage.setText("No empty spaces!")
-            self.QLabelMessage.resize(280, 20)
-            return
-        if self.password.text() != self.password2.text():
-            self.QLabelMessage.setText("Passwords are unequal!")
-            self.QLabelMessage.resize(280,20)
-            return
+        regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+
+        query: dict = {
+            (not re.fullmatch(regex, self.email.text())): "No real email format!",
+            (not self.firstName.text() or not self.userName.text() or not self.password.text() or not self.email.text()): "No empty spaces!",
+            (self.password.text() != self.password2.text()) : "Passwords are unequal!"
+        }
+
+        for key in query:
+            print(key)
+            print(query.get(key))
+            if key:
+                self.QLabelMessage.setText(query.get(key))
+                self.QLabelMessage.resize(280, 20)
+                return
+
         reply = WriterHelper.addWriter(Writer(self.userName.text(), PasswordHelper.encode(self.password.text()), None, self.firstName.text(), self.email.text()))
         if hasattr(reply, "writerId"):
             print(f"User {reply.userName} registered.")

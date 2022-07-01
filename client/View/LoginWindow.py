@@ -62,4 +62,3 @@ class LoginWindow(QDialog):
     def register(self):
         self.parent.UserRegisers()
         self.close()
-

@@ -123,7 +123,7 @@ class DeleteDialog(QDialog):
 
         button = QPushButton("Delete")
 
-        def click():
+        def delete():
             delNote: Note = None
             for note in self.parent.parent.allNotes:
                 if listWidget.currentItem().text() == note.title:
@@ -137,7 +137,7 @@ class DeleteDialog(QDialog):
             except AttributeError:
                 pass
 
-        button.clicked.connect(click)
+        button.clicked.connect(delete)
         window_layout.addWidget(button)
 
         self.setLayout(window_layout)

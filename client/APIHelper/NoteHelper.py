@@ -5,6 +5,7 @@ import requests
 from types import SimpleNamespace
 
 import sys
+
 sys.path.append('../')
 
 from Model.Note import Note
@@ -42,8 +43,8 @@ def updateNote(token: Token, note: Note):
     }
     try:
         r = requests.put("http://localhost:8090/updateNote",
-                          data=note.toJSON(),
-                          headers=headers)
+                         data=note.toJSON(),
+                         headers=headers)
         print(f"updated note{note.title}")
         return r.content
     except requests.exceptions.RequestException as e:
@@ -55,7 +56,7 @@ def deleteNote(token: Token, note: Note):
         'Accept': 'application/json',  # Accepting json strings from server
         'Content-Type': 'application/json',  # Sending json strings to server
         'Content-Encoding': 'gzip',  # Compressing all data send by the client to save bandwidth
-        'token':  token.token
+        'token': token.token
     }
     try:
         r = requests.delete("http://localhost:8090/deleteNote",
@@ -64,6 +65,7 @@ def deleteNote(token: Token, note: Note):
         print(f"Deleted Note {note.title}")
     except requests.exceptions.RequestException as e:
         return e
+
 
 def getAllNotes(token: Token) -> list:
     headers = {
@@ -76,7 +78,7 @@ def getAllNotes(token: Token) -> list:
                          data=token.toJSON(),
                          headers=headers)
         s = r.content.replace(b"\n", b"\\n")
-        l = json.loads(s, object_hook=lambda d: SimpleNamespace(**d))
+        l = json.loads(s, object_hook=lambda d: SimpleNamespace(**d), strict=False)
         print(l)
         if hasattr(l, "notes"):
             return list(map(lambda x: Note(x.noteId, x.title, x.note, x.writerId), l.notes))
